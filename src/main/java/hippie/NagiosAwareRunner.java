@@ -77,7 +77,7 @@ public class NagiosAwareRunner extends Runner {
                                         MonitorsService ann =
                                             desc.getAnnotation(
                                                 MonitorsService.class);
-                                        message = ann.value();
+                                        message = ann.name();
                                 } catch (Throwable e) {
                                         e.printStackTrace();
                                 }

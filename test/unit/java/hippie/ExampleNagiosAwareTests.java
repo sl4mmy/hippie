@@ -22,13 +22,13 @@ import org.junit.runner.RunWith;
 @RunWith(NagiosAwareRunner.class)
 public class ExampleNagiosAwareTests {
         @Test
-        @MonitorsService("foo/bar(baz)")
+        @MonitorsService(name = "foo/bar(baz)")
         public void foo() {
                 fail("nagios sucks");
         }
 
         @Test
-        @MonitorsService("hello!!!!!!")
+        @MonitorsService(name = "hello!!!!!!")
         public void bar() {
         }
 }

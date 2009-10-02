@@ -17,8 +17,17 @@ package hippie;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.lang.annotation.ElementType;
 
 @Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
 public @interface MonitorsService {
-        String value();
+        String name();
+
+        String failureMessage() default "is not responding correctly.";
+
+        String ignoredMessage() default "was ignored.";
+
+        String successMessage() default "is responding correctly.";
 }
