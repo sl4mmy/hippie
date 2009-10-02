@@ -23,10 +23,14 @@ import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.InitializationError;
 
+/**
+ * Understands how to interpret the result of JUnit 4.x-style tests as Nagios
+ * passive service checks.
+ */
 public class NagiosAwareRunner extends Runner {
-        private BlockJUnit4ClassRunner delegate;
+        private final Runner delegate;
 
-        public NagiosAwareRunner(Class test) throws InitializationError {
+        public NagiosAwareRunner(final Class test) throws InitializationError {
                 delegate = new BlockJUnit4ClassRunner(test);
         }
 
@@ -71,7 +75,8 @@ public class NagiosAwareRunner extends Runner {
                                         Description desc =
                                             failure.getDescription();
                                         MonitorsService ann =
-                                            desc.getAnnotation(MonitorsService.class);
+                                            desc.getAnnotation(
+                                                MonitorsService.class);
                                         message = ann.value();
                                 } catch (Throwable e) {
                                         e.printStackTrace();
