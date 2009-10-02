@@ -19,6 +19,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Nagios {
+public @interface MonitorsService {
         String value();
 }

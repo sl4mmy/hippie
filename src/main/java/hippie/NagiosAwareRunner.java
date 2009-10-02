@@ -70,8 +70,8 @@ public class NagiosAwareRunner extends Runner {
                                 try {
                                         Description desc =
                                             failure.getDescription();
-                                        Nagios ann =
-                                            desc.getAnnotation(Nagios.class);
+                                        MonitorsService ann =
+                                            desc.getAnnotation(MonitorsService.class);
                                         message = ann.value();
                                 } catch (Throwable e) {
                                         e.printStackTrace();
