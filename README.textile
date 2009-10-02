@@ -1,0 +1,8 @@
+h2. Hippie
+
+Monitor third-party service endpoints from your integration tests by
+automatically sending Nagios passive service checks.
+
+h2. Authors
+
+* Kent R. Spillner <kspillner@acm.org>
