@@ -13,7 +13,6 @@
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
-
 package hippie;
 
 import static org.junit.Assert.fail;
@@ -22,16 +21,14 @@ import org.junit.runner.RunWith;
 
 @RunWith(Hippie.class)
 public class ExampleNagiosTest {
+        @Test
+        @Nagios("foo/bar(baz)")
+        public void foo() {
+                fail("nagios sucks");
+        }
 
-    @Test
-    @Nagios("foo/bar(baz)")
-    public void foo() {
-        fail("nagios sucks");
-    }
-
-    @Test
-    @Nagios("hello!!!!!!")
-    public void bar() {
-    }
-
+        @Test
+        @Nagios("hello!!!!!!")
+        public void bar() {
+        }
 }
