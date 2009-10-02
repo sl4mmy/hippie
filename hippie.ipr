@@ -14,6 +14,17 @@
     <option name="PER_PROJECT_SETTINGS">
       <value>
         <option name="KEEP_LINE_BREAKS" value="false" />
+        <option name="JAVA_INDENT_OPTIONS">
+          <value>
+            <option name="INDENT_SIZE" value="8" />
+            <option name="CONTINUATION_INDENT_SIZE" value="4" />
+            <option name="TAB_SIZE" value="8" />
+            <option name="USE_TAB_CHARACTER" value="false" />
+            <option name="SMART_TABS" value="false" />
+            <option name="LABEL_INDENT_SIZE" value="0" />
+            <option name="LABEL_INDENT_ABSOLUTE" value="false" />
+          </value>
+        </option>
         <option name="OTHER_INDENT_OPTIONS">
           <value>
             <option name="INDENT_SIZE" value="8" />
@@ -28,10 +39,9 @@
         <option name="LINE_SEPARATOR" value="&#10;" />
         <option name="ALIGN_MULTILINE_PARAMETERS" value="false" />
         <option name="ALIGN_MULTILINE_FOR" value="false" />
-        <option name="KEEP_BLANK_LINES_IN_DECLARATIONS" value="1" />
+        <option name="KEEP_BLANK_LINES_IN_DECLARATIONS" value="0" />
         <option name="KEEP_BLANK_LINES_IN_CODE" value="1" />
         <option name="KEEP_BLANK_LINES_BEFORE_RBRACE" value="0" />
-        <option name="BLANK_LINES_BEFORE_PACKAGE" value="1" />
         <option name="BLANK_LINES_AROUND_FIELD" value="1" />
         <option name="SPACE_WITHIN_ARRAY_INITIALIZER_BRACES" value="true" />
         <option name="SPACE_BEFORE_ARRAY_INITIALIZER_LBRACE" value="true" />
