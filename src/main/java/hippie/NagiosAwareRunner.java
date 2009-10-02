@@ -23,10 +23,10 @@ import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.InitializationError;
 
-public class Hippie extends Runner {
+public class NagiosAwareRunner extends Runner {
         private BlockJUnit4ClassRunner delegate;
 
-        public Hippie(Class test) throws InitializationError {
+        public NagiosAwareRunner(Class test) throws InitializationError {
                 delegate = new BlockJUnit4ClassRunner(test);
         }
 

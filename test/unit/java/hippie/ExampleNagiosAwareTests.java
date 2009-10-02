@@ -19,8 +19,8 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-@RunWith(Hippie.class)
-public class ExampleNagiosTest {
+@RunWith(NagiosAwareRunner.class)
+public class ExampleNagiosAwareTests {
         @Test
         @Nagios("foo/bar(baz)")
         public void foo() {
