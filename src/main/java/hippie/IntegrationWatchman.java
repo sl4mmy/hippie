@@ -18,8 +18,8 @@ package hippie;
 import org.junit.rules.TestWatchman;
 
 /**
- * Understands how to automatically notify Nagios servers of the status of
- * external service endpoints.
+ * Understands how to automatically notify Nagios servers of the status
+ * of external service endpoints.
  */
 public class IntegrationWatchman extends TestWatchman {
 }

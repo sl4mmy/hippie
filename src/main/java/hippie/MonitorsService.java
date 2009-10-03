@@ -21,8 +21,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Represents JUnit 4.x-style test cases which check on the availability of
- * external service endpoints.
+ * Represents JUnit 4.x-style test cases which check on the availability
+ * of external service endpoints.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

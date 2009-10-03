@@ -24,13 +24,14 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.InitializationError;
 
 /**
- * Understands how to interpret the result of JUnit 4.x-style tests as Nagios
- * passive service checks.
+ * Understands how to interpret the result of JUnit 4.x-style tests as
+ * Nagios passive service checks.
  */
 public class NagiosAwareRunner extends Runner {
         private final Runner delegate;
 
-        public NagiosAwareRunner(final Class test) throws InitializationError {
+        public NagiosAwareRunner(final Class test)
+            throws InitializationError {
                 delegate = new BlockJUnit4ClassRunner(test);
         }
 
@@ -47,7 +48,8 @@ public class NagiosAwareRunner extends Runner {
                         public String message;
 
                         @Override
-                        public void testStarted(final Description description)
+                        public void testStarted(
+                            final Description description)
                             throws Exception {
                                 failed = false;
                                 message = "";
@@ -55,7 +57,8 @@ public class NagiosAwareRunner extends Runner {
                         }
 
                         @Override
-                        public void testFinished(final Description description)
+                        public void testFinished(
+                            final Description description)
                             throws Exception {
                                 if (failed) {
                                         System.out.println(
@@ -63,7 +66,8 @@ public class NagiosAwareRunner extends Runner {
                                                 + message);
                                 } else {
                                         System.out
-                                            .println("test finished (passed)");
+                                            .println(
+                                                "test finished (passed)");
                                 }
                         }
 
@@ -86,7 +90,8 @@ public class NagiosAwareRunner extends Runner {
                         @Override
                         public void testAssumptionFailure(
                             final Failure failure) {
-                                System.out.println("test assumption failure");
+                                System.out
+                                    .println("test assumption failure");
                         }
                 };
                 notifier.addListener(listener);

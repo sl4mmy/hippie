@@ -28,6 +28,7 @@ public class IntegrationWatchmanTests {
         }
 
         public static junit.framework.Test suite() {
-                return new JUnit4TestAdapter(IntegrationWatchmanTests.class);
+                return new JUnit4TestAdapter(
+                    IntegrationWatchmanTests.class);
         }
 }

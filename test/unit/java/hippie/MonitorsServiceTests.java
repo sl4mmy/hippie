@@ -26,11 +26,13 @@ import java.lang.annotation.Target;
 
 public class MonitorsServiceTests {
         @Test
-        public void shouldHaveRuntimeRetentionPolicy() throws Exception {
-                final Retention retention =
-                    MonitorsService.class.getAnnotation(Retention.class);
+        public void shouldHaveRuntimeRetentionPolicy()
+            throws Exception {
+                final Retention retention = MonitorsService.class
+                    .getAnnotation(Retention.class);
 
-                assertEquals(RetentionPolicy.RUNTIME, retention.value());
+                assertEquals(RetentionPolicy.RUNTIME,
+                    retention.value());
         }
 
         @Test
@@ -55,7 +57,8 @@ public class MonitorsServiceTests {
         public void shouldDefaultIgnoredMessage() throws Exception {
                 final MonitorsService annotation = withNameOnly();
 
-                assertEquals("was ignored.", annotation.ignoredMessage());
+                assertEquals("was ignored.",
+                    annotation.ignoredMessage());
         }
 
         @Test
@@ -67,7 +70,8 @@ public class MonitorsServiceTests {
         }
 
         public static junit.framework.Test suite() {
-                return new JUnit4TestAdapter(MonitorsServiceTests.class);
+                return new JUnit4TestAdapter(
+                    MonitorsServiceTests.class);
         }
 
         private MonitorsService annotation(final Class type,
