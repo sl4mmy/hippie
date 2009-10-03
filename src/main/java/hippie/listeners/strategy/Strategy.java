@@ -13,7 +13,7 @@
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
-package hippie.listeners;
+package hippie.listeners.strategy;
 
 /**
  * Represents things that know how to appropriately notify Nagios of the

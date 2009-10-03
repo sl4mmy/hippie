@@ -13,12 +13,13 @@
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
-package hippie.listeners;
+package hippie.listeners.strategy;
 
 import hippie.notifiers.NagiosNotifier;
 import junit.framework.JUnit4TestAdapter;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
-import org.junit.Test;import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -33,9 +34,9 @@ public class OnSuccessTests {
 
         @Test
         public void shouldBeAnInstanceofStrategy() throws Exception {
-                assertEquals(true, new OnSuccess(notifier) instanceof Strategy);
+                assertEquals(true,
+                    new OnSuccess(notifier) instanceof Strategy);
         }
-
 
         public static junit.framework.Test suite() {
                 return new JUnit4TestAdapter(OnSuccessTests.class);
