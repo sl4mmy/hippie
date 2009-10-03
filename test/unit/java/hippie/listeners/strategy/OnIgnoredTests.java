@@ -16,34 +16,29 @@
 package hippie.listeners.strategy;
 
 import hippie.notifiers.NagiosNotifier;
+import junit.framework.JUnit4TestAdapter;
+import static org.junit.Assert.assertEquals;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
-/**
- * Understands how to notify Nagios when service-monitoring test cases
- * do not pass.
- */
-public class OnFailure implements Strategy {
-        private final NagiosNotifier notifier;
+public class OnIgnoredTests {
+        @Mock
+        private NagiosNotifier notifier;
 
-        public OnFailure(final NagiosNotifier notifier) {
-                this.notifier = notifier;
+        @Before
+        public void initializeMocks() throws Exception {
+                MockitoAnnotations.initMocks(this);
         }
 
-        public void execute(final String name, final String message) {
+        @Test
+        public void shouldBeAnInstaceOfStrategy() throws Exception {
+                assertEquals(true,
+                    new OnIgnored(notifier) instanceof Strategy);
         }
 
-        public String getMessage() {
-                return null;
-        }
-
-        public OnFailure failed() {
-                return null;
-        }
-
-        public OnIgnored ignored() {
-                return null;
-        }
-
-        public OnSuccess succeeded() {
-                return null;
+        public static junit.framework.Test suite() {
+                return new JUnit4TestAdapter(OnIgnoredTests.class);
         }
 }

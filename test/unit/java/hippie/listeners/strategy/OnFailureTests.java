@@ -33,7 +33,7 @@ public class OnFailureTests {
         }
 
         @Test
-        public void shouldXXX() throws Exception {
+        public void shouldBeAnInstanceOfStrategy() throws Exception {
                 assertEquals(true,
                     new OnFailure(notifier) instanceof Strategy);
         }
