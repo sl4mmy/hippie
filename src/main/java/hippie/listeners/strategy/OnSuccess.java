@@ -16,6 +16,7 @@
 package hippie.listeners.strategy;
 
 import hippie.notifiers.NagiosNotifier;
+import hippie.MonitorsService;
 
 /**
  * Understands how to notify Nagios when service-monitoring test cases
@@ -31,7 +32,7 @@ public class OnSuccess implements Strategy {
         public void execute(final String name, final String message) {
         }
 
-        public String getMessage() {
+        public String getMessage(final MonitorsService annotation) {
                 return null;
         }
 

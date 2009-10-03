@@ -15,6 +15,8 @@
  */
 package hippie.listeners.strategy;
 
+import hippie.MonitorsService;
+
 /**
  * Represents things that know how to appropriately notify Nagios of the
  * result of individual test cases.
@@ -22,7 +24,7 @@ package hippie.listeners.strategy;
 public interface Strategy {
         void execute(final String name, final String message);
 
-        String getMessage();
+        String getMessage(final MonitorsService annotation);
 
         OnFailure failed();
 
