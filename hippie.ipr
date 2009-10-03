@@ -415,6 +415,17 @@
       <JAVADOC />
       <SOURCES />
     </library>
+    <library name="Mockito">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/libs/mockito/v1.8.0/mockito-all-1.8.0.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/libs/mockito/v1.8.0/mockito-all-1.8.0.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/libs/mockito/v1.8.0/mockito-all-1.8.0.jar!/" />
+      </SOURCES>
+    </library>
   </component>
   <component name="uidesigner-configuration">
     <option name="INSTRUMENT_CLASSES" value="false" />
