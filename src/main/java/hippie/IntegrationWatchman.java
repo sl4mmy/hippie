@@ -19,7 +19,7 @@ import org.junit.rules.TestWatchman;
 
 /**
  * Understands how to automatically notify Nagios servers of the status of
- * third-party service endpoints.
+ * external service endpoints.
  */
 public class IntegrationWatchman extends TestWatchman {
 }
