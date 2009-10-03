@@ -30,7 +30,7 @@ h2. Contributors
 
 h2. Special Thanks
 
-* Greg Warren
+* Greg Warren - whose dogged commitment to integration tests, and advocacy of their inherent value as a cross-team communication tool, was the inspiration for this project
 
 h2. ThoughtWorks, Inc.
 
