@@ -29,11 +29,7 @@ public class OnIgnored implements Strategy {
                 this.notifier = notifier;
         }
 
-        public void execute(final String name, final String message) {
-        }
-
-        public String getMessage(final MonitorsService annotation) {
-                return null;
+        public void execute(final MonitorsService annotation) {
         }
 
         public OnFailure failed() {

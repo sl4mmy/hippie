@@ -22,9 +22,7 @@ import hippie.MonitorsService;
  * result of individual test cases.
  */
 public interface Strategy {
-        void execute(final String name, final String message);
-
-        String getMessage(final MonitorsService annotation);
+        void execute(final MonitorsService annotation);
 
         OnFailure failed();
 
