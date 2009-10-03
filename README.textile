@@ -34,4 +34,4 @@ h2. Special Thanks
 
 h2. ThoughtWorks, Inc.
 
-hippie is another ThoughtWorks innovation.
+_hippie_ is another ThoughtWorks innovation.
