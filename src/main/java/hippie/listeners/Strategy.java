@@ -15,35 +15,18 @@
  */
 package hippie.listeners;
 
-import hippie.notifiers.NagiosNotifier;
-
 /**
- * Understands how to notify Nagios when service-monitoring test cases
- * do not pass.
+ * Represents things that know how to appropriately notify Nagios of the
+ * result of individual test cases.
  */
-public class OnFailure {
-        private final NagiosNotifier notifier;
+public interface Strategy {
+        void execute(final String name, final String message);
 
-        public OnFailure(final NagiosNotifier notifier) {
-                this.notifier = notifier;
-        }
+        String getMessage();
 
-        public void execute(final String name, final String message) {
-        }
+        OnFailure failed();
 
-        public String getMessage() {
-                return null;
-        }
+        OnIgnored ignored();
 
-        public Strategy failed() {
-                return null;
-        }
-
-        public Strategy ignored() {
-                return null;
-        }
-
-        public Strategy succeeded() {
-                return null;
-        }
+        OnSuccess succeeded();
 }
