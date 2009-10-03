@@ -3,6 +3,36 @@ h2. Hippie
 Monitor third-party service endpoints from your integration tests by
 automatically sending Nagios passive service checks.
 
+h2. License
+
+Copyright (c) 2009, Kent R. Spillner <kspillner@acm.org>
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted, provided that the above
+copyright notice and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
 h2. Authors
 
 * Kent R. Spillner <kspillner@acm.org>
+
+h2. Contributors
+
+* Paul Hammant
+* Jimmy Staggs
+* Lejo Varughese
+
+h2. Special Thanks
+
+* Greg Warren
+
+h2. ThoughtWorks, Inc.
+
+hippie is another ThoughtWorks innovation.
