@@ -34,7 +34,8 @@ public class OnFailureTests {
 
         @Test
         public void shouldXXX() throws Exception {
-                assertEquals(true, new OnFailure(notifier) instanceof Strategy);
+                assertEquals(true,
+                    new OnFailure(notifier) instanceof Strategy);
         }
 
         public static junit.framework.Test suite() {
