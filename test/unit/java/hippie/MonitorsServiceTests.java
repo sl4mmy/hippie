@@ -45,7 +45,7 @@ public class MonitorsServiceTests {
 
         @Test
         public void shouldDefaultFailureMessage() throws Exception {
-                final MonitorsService annotation = nameOnly();
+                final MonitorsService annotation = withNameOnly();
 
                 assertEquals("is not responding correctly.",
                     annotation.failureMessage());
@@ -53,14 +53,14 @@ public class MonitorsServiceTests {
 
         @Test
         public void shouldDefaultIgnoredMessage() throws Exception {
-                final MonitorsService annotation = nameOnly();
+                final MonitorsService annotation = withNameOnly();
 
                 assertEquals("was ignored.", annotation.ignoredMessage());
         }
 
         @Test
         public void shouldDefaultSuccessMessage() throws Exception {
-                final MonitorsService annotation = nameOnly();
+                final MonitorsService annotation = withNameOnly();
 
                 assertEquals("is responding correctly.",
                     annotation.successMessage());
@@ -76,7 +76,7 @@ public class MonitorsServiceTests {
                     .getAnnotation(MonitorsService.class);
         }
 
-        private MonitorsService nameOnly() throws Exception {
+        private MonitorsService withNameOnly() throws Exception {
                 class DoesNotMatter {
                         @MonitorsService(name = "DOES NOT MATTER")
                         public void doesNotMatter() {
