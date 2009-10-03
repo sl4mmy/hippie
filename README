@@ -1,6 +1,6 @@
 HIPPIE
 ------------------------------------------------------------------------
-Monitor third-party service endpoints from your integration tests by
+Monitors external service endpoints from integration tests by
 automatically sending Nagios passive service checks.
 
 LICENSE

@@ -1,7 +1,6 @@
 h2. Hippie
 
-Monitor third-party service endpoints from your integration tests by
-automatically sending Nagios passive service checks.
+Monitors external service endpoints from integration tests by automatically sending Nagios passive service checks.
 
 h2. License
 
