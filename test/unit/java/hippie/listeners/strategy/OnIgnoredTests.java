@@ -15,15 +15,21 @@
  */
 package hippie.listeners.strategy;
 
+import hippie.MonitorsService;
 import hippie.notifiers.NagiosNotifier;
 import junit.framework.JUnit4TestAdapter;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 
 public class OnIgnoredTests {
+        @Mock
+        private MonitorsService annotation;
+
         @Mock
         private NagiosNotifier notifier;
 
@@ -33,9 +39,70 @@ public class OnIgnoredTests {
         }
 
         @Test
-        public void shouldBeAnInstaceOfStrategy() throws Exception {
+        public void shouldBeAnInstanceOfStrategy() throws Exception {
                 assertEquals(true,
                     new OnIgnored(notifier) instanceof Strategy);
+        }
+
+        @Test
+        public void shouldGetServiceNameFromAnnotationWhenExecuting()
+            throws Exception {
+                final OnIgnored strategy = new OnIgnored(notifier);
+
+                strategy.execute(annotation);
+
+                verify(annotation).name();
+        }
+
+        @Test
+        public void shouldGetIgnoredMessageFromAnnotationWhenExecuting()
+            throws Exception {
+                final OnIgnored strategy = new OnIgnored(notifier);
+
+                strategy.execute(annotation);
+
+                verify(annotation).ignoredMessage();
+        }
+
+        @Test
+        public void shouldNotifyNagiosOfIgnoredServiceCheckWhenExecuting()
+            throws Exception {
+                when(annotation.name()).thenReturn("SERVICE NAME");
+                when(annotation.ignoredMessage())
+                    .thenReturn("IGNORED MESSAGE");
+
+                final OnIgnored strategy = new OnIgnored(notifier);
+
+                strategy.execute(annotation);
+
+                verify(notifier)
+                    .ignored("SERVICE NAME", "IGNORED MESSAGE");
+        }
+
+        @Test
+        public void shouldReturnAnInstanceOfOnFailureWhenGettingFailureStrategy()
+            throws Exception {
+                final OnIgnored strategy = new OnIgnored(notifier);
+
+                assertEquals(true,
+                    strategy.failed() instanceof OnFailure);
+        }
+
+        @Test
+        public void shouldReturnSelfWhenGettingIgnoredStrategy()
+            throws Exception {
+                final OnIgnored strategy = new OnIgnored(notifier);
+
+                assertEquals(strategy, strategy.ignored());
+        }
+
+        @Test
+        public void shouldReturnAnInstanceOfOnSuccessWhenGettingSuccessStrategy()
+            throws Exception {
+                final OnIgnored strategy = new OnIgnored(notifier);
+
+                assertEquals(true,
+                    strategy.succeeded() instanceof OnSuccess);
         }
 
         public static junit.framework.Test suite() {

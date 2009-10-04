@@ -30,17 +30,21 @@ public class OnSuccess implements Strategy {
         }
 
         public void execute(final MonitorsService annotation) {
+                final String name = annotation.name();
+                final String message = annotation.successMessage();
+
+                notifier.succeeded(name, message);
         }
 
         public OnFailure failed() {
-                return null;
+                return new OnFailure(notifier);
         }
 
         public OnIgnored ignored() {
-                return null;
+                return new OnIgnored(notifier);
         }
 
         public OnSuccess succeeded() {
-                return null;
+                return this;
         }
 }

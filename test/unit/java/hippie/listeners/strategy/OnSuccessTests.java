@@ -15,15 +15,21 @@
  */
 package hippie.listeners.strategy;
 
+import hippie.MonitorsService;
 import hippie.notifiers.NagiosNotifier;
 import junit.framework.JUnit4TestAdapter;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 
 public class OnSuccessTests {
+        @Mock
+        private MonitorsService annotation;
+
         @Mock
         private NagiosNotifier notifier;
 
@@ -36,6 +42,67 @@ public class OnSuccessTests {
         public void shouldBeAnInstanceofStrategy() throws Exception {
                 assertEquals(true,
                     new OnSuccess(notifier) instanceof Strategy);
+        }
+
+        @Test
+        public void shouldGetServiceNameFromAnnotationWhenExecuting()
+            throws Exception {
+                final OnSuccess strategy = new OnSuccess(notifier);
+
+                strategy.execute(annotation);
+
+                verify(annotation).name();
+        }
+
+        @Test
+        public void shouldGetSuccessMessageFromAnnotationWhenExecuting()
+            throws Exception {
+                final OnSuccess strategy = new OnSuccess(notifier);
+
+                strategy.execute(annotation);
+
+                verify(annotation).successMessage();
+        }
+
+        @Test
+        public void shouldNotifyNagiosOfSuccessfulServiceCheckWhenExecuting()
+            throws Exception {
+                when(annotation.name()).thenReturn("SERVICE NAME");
+                when(annotation.successMessage())
+                    .thenReturn("SUCCESS MESSAGE");
+
+                final OnSuccess strategy = new OnSuccess(notifier);
+
+                strategy.execute(annotation);
+
+                verify(notifier)
+                    .succeeded("SERVICE NAME", "SUCCESS MESSAGE");
+        }
+
+        @Test
+        public void shouldReturnAnInstanceOfOnFailureWhenGettingFailureStrategy()
+            throws Exception {
+                final OnSuccess strategy = new OnSuccess(notifier);
+
+                assertEquals(true,
+                    strategy.failed() instanceof OnFailure);
+        }
+
+        @Test
+        public void shouldReturnAnInstanceOfOnIgnoredWhenGettingIgnoredStrategy()
+            throws Exception {
+                final OnSuccess strategy = new OnSuccess(notifier);
+
+                assertEquals(true,
+                    strategy.ignored() instanceof OnIgnored);
+        }
+
+        @Test
+        public void shouldReturnSelfWhenGettingSuccessStrategy()
+            throws Exception {
+                final OnSuccess strategy = new OnSuccess(notifier);
+
+                assertEquals(strategy, strategy.succeeded());
         }
 
         public static junit.framework.Test suite() {
