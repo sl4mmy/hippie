@@ -2,6 +2,76 @@ h2. Hippie
 
 Monitors external service endpoints from integration tests by automatically sending Nagios passive service checks.
 
+h2. Example
+
+pre.
+@RunWith(NagiosAwareRunner.class)
+public class IntegrationSmokeTests {
+        @Test
+        @MonitorsService(name = "AwesomeService")
+        public void awesomeServiceShouldBeAvailable() throws Exception {
+                final Service awesome = new AwesomeService();
+
+                smokeTest(awesome);
+
+                assertEquals(Service.AVAILABLE, awesome.getStatus());
+                assertEquals(Service.CORRECT, awesome.getResponse());
+        }
+
+        @Test
+        @MonitorsService(name = "Google",
+            failureMessage = "Google should never be down, so something must be terribly wrong!")
+        public void googleShouldNeverBeDown() throws Exception {
+                final Service google = new GoogleService();
+
+                assertEquals(Service.AVAILABLE, google.ping());
+        }
+
+        @Ignore
+        @Test
+        @MonitorsService(name = "UndocumentedService",
+            ignoredMessage = "ignoring until we finish reverse-engineering this undocumented API")
+        public void awesomeServiceShouldBeAvailable() throws Exception {
+                final Service undocumented = new UndocumentedService();
+
+                // TODO: figure out the correct order to call of these
+                // calls:
+                /*
+                undocumented.setListener(Environments.INTEGRATION_TEST);
+                undocumented.initialize();
+                final Token token = undocumented.getRequestToken();
+                final Service.Response response = undocumented.invoke(token);
+                */
+
+                assertEquals(Service.CORRECT, response.validate());
+        }
+
+        @Test
+        @MonitorsService(name = "UnstableService",
+            successMessage = "I can't believe it actually worked!")
+        public void awesomeServiceShouldBeAvailable() throws Exception {
+                final Service unstable = new UnstableService();
+
+                final Response response = unstable.invoke();
+
+                assertEquals(Service.AVAILABLE, response.getStatus());
+        }
+
+        @Test
+        @MonitorsService(name = "UberService",
+            failureMessage = "can't connect!",
+            ignoredMessage = "fiddling with something",
+            successMessage = "all systems are go!")
+        public void awesomeServiceShouldBeAvailable() throws Exception {
+                final Service uber = new UberService();
+
+                smokeTest(uber);
+
+                assertEquals(Service.AVAILABLE, uber.getStatus());
+                assertEquals(Service.CORRECT, uber.getResponse());
+        }
+}
+
 h2. License
 
 Copyright (c) 2009, Kent R. Spillner <kspillner@acm.org>
