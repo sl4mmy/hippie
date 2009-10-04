@@ -4,7 +4,7 @@ Monitors external service endpoints from integration tests by automatically send
 
 h2. Example
 
-pre.
+<pre><code>
 @RunWith(NagiosAwareRunner.class)
 public class IntegrationSmokeTests {
         @Test
@@ -71,6 +71,7 @@ public class IntegrationSmokeTests {
                 assertEquals(Service.CORRECT, uber.getResponse());
         }
 }
+</code></pre>
 
 h2. License
 
