@@ -32,15 +32,14 @@ public class NagiosNotifier {
 
         private final NagiosPassiveCheckSender notifier;
 
-        public NagiosNotifier(final String host, final int port,
-            final int connectionTimeout, final int responseTimeout,
-            final String password) {
+        public NagiosNotifier(final String host, final String password,
+            final int port, final int connectionTimeout, final int responseTimeout) {
                 final NagiosSettings settings =
                     NagiosSettingsBuilder.withNagiosHost(host)
+                        .withPassword(password)
                         .withPort(port)
                         .withConnectionTimeout(connectionTimeout)
-                        .withResponseTimeout(responseTimeout)
-                        .withPassword(password).create();
+                        .withResponseTimeout(responseTimeout).create();
                 this.localhost = getCanonicalLocalHostName();
                 this.notifier = new NagiosPassiveCheckSender(settings);
         }

@@ -102,7 +102,7 @@ public class OnFailureTests {
                 final OnFailure strategy = new OnFailure(notifier);
 
                 assertEquals(true,
-                    strategy.succeeded() instanceof OnSuccess);
+                    strategy.success() instanceof OnSuccess);
         }
 
         public static junit.framework.Test suite() {

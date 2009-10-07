@@ -44,7 +44,7 @@ public class OnSuccess implements Strategy {
                 return new OnIgnored(notifier);
         }
 
-        public OnSuccess succeeded() {
+        public OnSuccess success() {
                 return this;
         }
 }

@@ -15,24 +15,36 @@
  */
 package hippie;
 
+import hippie.listeners.NagiosAwareListener;
+import hippie.listeners.strategy.OnSuccess;
+import hippie.notifiers.NagiosNotifier;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
-import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.InitializationError;
 
+import java.util.Properties;
+
 /**
- * Understands how to interpret the result of JUnit 4.x-style tests as
- * Nagios passive service checks.
+ * Understands how to execute JUnit 4.x-style service-monitoring tests.
  */
 public class NagiosAwareRunner extends Runner {
+        private final Properties configuration;
+
         private final Runner delegate;
 
         public NagiosAwareRunner(final Class test)
             throws InitializationError {
-                delegate = new BlockJUnit4ClassRunner(test);
+                this(new BlockJUnit4ClassRunner(test),
+                    System.getProperties());
+        }
+
+        private NagiosAwareRunner(final Runner delegate,
+            final Properties configuration) {
+                this.delegate = delegate;
+                this.configuration = configuration;
         }
 
         @Override
@@ -42,59 +54,36 @@ public class NagiosAwareRunner extends Runner {
 
         @Override
         public void run(final RunNotifier notifier) {
-                RunListener listener = new RunListener() {
-                        public boolean failed;
-
-                        public String message;
-
-                        @Override
-                        public void testStarted(
-                            final Description description)
-                            throws Exception {
-                                failed = false;
-                                message = "";
-                                super.testStarted(description);
-                        }
-
-                        @Override
-                        public void testFinished(
-                            final Description description)
-                            throws Exception {
-                                if (failed) {
-                                        System.out.println(
-                                            "test finished (failed): "
-                                                + message);
-                                } else {
-                                        System.out
-                                            .println(
-                                                "test finished (passed)");
-                                }
-                        }
-
-                        @Override
-                        public void testFailure(final Failure failure)
-                            throws Exception {
-                                failed = true;
-                                try {
-                                        Description desc =
-                                            failure.getDescription();
-                                        MonitorsService ann =
-                                            desc.getAnnotation(
-                                                MonitorsService.class);
-                                        message = ann.name();
-                                } catch (Throwable e) {
-                                        e.printStackTrace();
-                                }
-                        }
-
-                        @Override
-                        public void testAssumptionFailure(
-                            final Failure failure) {
-                                System.out
-                                    .println("test assumption failure");
-                        }
-                };
+                final RunListener listener = initializeListener();
                 notifier.addListener(listener);
                 delegate.run(notifier);
+        }
+
+        private RunListener initializeListener() {
+                final String nagiosServer =
+                    configuration.getProperty("hippie.nagios.server");
+                final String nagiosPassword =
+                    configuration.getProperty("hippie.nagios.password");
+                final int nagiosPort = toInt(configuration.getProperty(
+                    "hippie.nagios.port", "5667"));
+                final int connectionTimeout = toInt(
+                    configuration.getProperty(
+                        "hippie.nagios.timeout.connection", "5000"));
+                final int responseTimeout = toInt(
+                    configuration.getProperty(
+                        "hippie.nagios.timeout.response", "15000"));
+
+                final NagiosNotifier notifier = new NagiosNotifier(
+                    nagiosServer, nagiosPassword, nagiosPort,
+                    connectionTimeout, responseTimeout);
+                final OnSuccess successStrategy =
+                    new OnSuccess(notifier);
+
+                return new NagiosAwareListener(notifier,
+                    successStrategy);
+        }
+
+        private int toInt(final String value) {
+                return Integer.valueOf(value);
         }
 }

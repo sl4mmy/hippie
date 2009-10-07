@@ -28,5 +28,5 @@ public interface Strategy {
 
         OnIgnored ignored();
 
-        OnSuccess succeeded();
+        OnSuccess success();
 }

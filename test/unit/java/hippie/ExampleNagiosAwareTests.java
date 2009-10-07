@@ -21,6 +21,12 @@ import org.junit.runner.RunWith;
 
 @RunWith(NagiosAwareRunner.class)
 public class ExampleNagiosAwareTests {
+        static {
+                System.setProperty("hippie.nagios.server", "localhost");
+                System
+                    .setProperty("hippie.nagios.password", "password");
+        }
+
         @Test
         @MonitorsService(name = "foo/bar(baz)")
         public void foo() {

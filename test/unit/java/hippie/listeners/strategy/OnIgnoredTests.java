@@ -102,7 +102,7 @@ public class OnIgnoredTests {
                 final OnIgnored strategy = new OnIgnored(notifier);
 
                 assertEquals(true,
-                    strategy.succeeded() instanceof OnSuccess);
+                    strategy.success() instanceof OnSuccess);
         }
 
         public static junit.framework.Test suite() {
