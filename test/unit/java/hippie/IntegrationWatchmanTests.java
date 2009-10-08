@@ -15,16 +15,107 @@
  */
 package hippie;
 
+import hippie.notifiers.NagiosNotifier;
 import junit.framework.JUnit4TestAdapter;
 import static org.junit.Assert.assertEquals;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.rules.TestWatchman;
+import org.junit.runners.model.FrameworkMethod;
+import org.mockito.Mock;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
+import org.mockito.MockitoAnnotations;
 
 public class IntegrationWatchmanTests {
+        @Mock
+        private Exception cause;
+
+        @Mock
+        private FrameworkMethod method;
+
+        @Mock
+        private NagiosNotifier notifier;
+
+        @Before
+        public void initializeMocks() throws Exception {
+                MockitoAnnotations.initMocks(this);
+        }
+
         @Test
         public void shouldBeAnInstanceOfWatchman() throws Exception {
-                assertEquals(true,
-                    new IntegrationWatchman() instanceof TestWatchman);
+                assertEquals(true, new IntegrationWatchman(
+                    notifier) instanceof TestWatchman);
+        }
+
+        @Test
+        public void shouldNotifyNagiosWhenServiceMonitoringTestsFail()
+            throws Exception {
+                final MonitorsService annotation =
+                    mock(MonitorsService.class);
+                when(annotation.name()).thenReturn("SERVICE NAME");
+                when(annotation.failureMessage())
+                    .thenReturn("FAILURE MESSAGE");
+                when(method.getAnnotation(MonitorsService.class))
+                    .thenReturn(annotation);
+
+                final IntegrationWatchman watchman =
+                    new IntegrationWatchman(notifier);
+
+                watchman.failed(cause, method);
+
+                verify(notifier)
+                    .failed("SERVICE NAME", "FAILURE MESSAGE");
+        }
+
+        @Test
+        public void shouldNotNotifyNagiosWhenNonServiceMonitoringTestsFail()
+            throws Exception {
+                when(method.getAnnotation(MonitorsService.class))
+                    .thenReturn(null);
+
+                final IntegrationWatchman watchman =
+                    new IntegrationWatchman(notifier);
+
+                watchman.failed(cause, method);
+
+                verifyZeroInteractions(notifier);
+        }
+
+        @Test
+        public void shouldNotifyNagiosWhenServiceMonitoringTestsSucceed()
+            throws Exception {
+                final MonitorsService annotation =
+                    mock(MonitorsService.class);
+                when(annotation.name()).thenReturn("SERVICE NAME");
+                when(annotation.successMessage())
+                    .thenReturn("SUCCESS MESSAGE");
+                when(method.getAnnotation(MonitorsService.class))
+                    .thenReturn(annotation);
+
+                final IntegrationWatchman watchman =
+                    new IntegrationWatchman(notifier);
+
+                watchman.succeeded(method);
+
+                verify(notifier)
+                    .succeeded("SERVICE NAME", "SUCCESS MESSAGE");
+        }
+
+        @Test
+        public void shouldNotNotifyNagiosWhenNonServiceMonitoringTestsSucceed()
+            throws Exception {
+                when(method.getAnnotation(MonitorsService.class))
+                    .thenReturn(null);
+
+                final IntegrationWatchman watchman =
+                    new IntegrationWatchman(notifier);
+
+                watchman.succeeded(method);
+
+                verifyZeroInteractions(notifier);
         }
 
         public static junit.framework.Test suite() {

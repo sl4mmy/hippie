@@ -15,11 +15,41 @@
  */
 package hippie;
 
+import hippie.notifiers.NagiosNotifier;
 import org.junit.rules.TestWatchman;
+import org.junit.runners.model.FrameworkMethod;
 
 /**
  * Understands how to automatically notify Nagios servers of the status
  * of external service endpoints.
  */
 public class IntegrationWatchman extends TestWatchman {
+        private final NagiosNotifier notifier;
+
+        public IntegrationWatchman(final NagiosNotifier notifier) {
+                this.notifier = notifier;
+        }
+
+        @Override
+        public void succeeded(final FrameworkMethod method) {
+                final MonitorsService annotation =
+                    method.getAnnotation(MonitorsService.class);
+
+                if (annotation != null) {
+                        notifier.succeeded(annotation.name(),
+                            annotation.successMessage());
+                }
+        }
+
+        @Override
+        public void failed(final Throwable e,
+            final FrameworkMethod method) {
+                final MonitorsService annotation =
+                    method.getAnnotation(MonitorsService.class);
+
+                if (annotation != null) {
+                        notifier.failed(annotation.name(),
+                            annotation.failureMessage());
+                }
+        }
 }
