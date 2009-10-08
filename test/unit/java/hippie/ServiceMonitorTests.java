@@ -29,7 +29,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 
-public class IntegrationWatchmanTests {
+public class ServiceMonitorTests {
         @Mock
         private Exception cause;
 
@@ -46,7 +46,7 @@ public class IntegrationWatchmanTests {
 
         @Test
         public void shouldBeAnInstanceOfWatchman() throws Exception {
-                assertEquals(true, new IntegrationWatchman(
+                assertEquals(true, new ServiceMonitor(
                     notifier) instanceof TestWatchman);
         }
 
@@ -61,8 +61,8 @@ public class IntegrationWatchmanTests {
                 when(method.getAnnotation(MonitorsService.class))
                     .thenReturn(annotation);
 
-                final IntegrationWatchman watchman =
-                    new IntegrationWatchman(notifier);
+                final ServiceMonitor watchman =
+                    new ServiceMonitor(notifier);
 
                 watchman.failed(cause, method);
 
@@ -76,8 +76,8 @@ public class IntegrationWatchmanTests {
                 when(method.getAnnotation(MonitorsService.class))
                     .thenReturn(null);
 
-                final IntegrationWatchman watchman =
-                    new IntegrationWatchman(notifier);
+                final ServiceMonitor watchman =
+                    new ServiceMonitor(notifier);
 
                 watchman.failed(cause, method);
 
@@ -95,8 +95,8 @@ public class IntegrationWatchmanTests {
                 when(method.getAnnotation(MonitorsService.class))
                     .thenReturn(annotation);
 
-                final IntegrationWatchman watchman =
-                    new IntegrationWatchman(notifier);
+                final ServiceMonitor watchman =
+                    new ServiceMonitor(notifier);
 
                 watchman.succeeded(method);
 
@@ -110,8 +110,8 @@ public class IntegrationWatchmanTests {
                 when(method.getAnnotation(MonitorsService.class))
                     .thenReturn(null);
 
-                final IntegrationWatchman watchman =
-                    new IntegrationWatchman(notifier);
+                final ServiceMonitor watchman =
+                    new ServiceMonitor(notifier);
 
                 watchman.succeeded(method);
 
@@ -120,6 +120,6 @@ public class IntegrationWatchmanTests {
 
         public static junit.framework.Test suite() {
                 return new JUnit4TestAdapter(
-                    IntegrationWatchmanTests.class);
+                    ServiceMonitorTests.class);
         }
 }

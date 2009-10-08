@@ -23,10 +23,10 @@ import org.junit.runners.model.FrameworkMethod;
  * Understands how to automatically notify Nagios servers of the status
  * of external service endpoints.
  */
-public class IntegrationWatchman extends TestWatchman {
+public class ServiceMonitor extends TestWatchman {
         private final NagiosNotifier notifier;
 
-        public IntegrationWatchman(final NagiosNotifier notifier) {
+        public ServiceMonitor(final NagiosNotifier notifier) {
                 this.notifier = notifier;
         }
 
