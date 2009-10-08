@@ -20,7 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(NagiosAwareRunner.class)
-public class ExampleNagiosAwareTests {
+public class ExampleNagiosAwareTest {
         static {
                 System.setProperty("hippie.nagios.server", "localhost");
                 System

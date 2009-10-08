@@ -1,0 +1,378 @@
+<?xml version="1.0"?>
+<project name="hippie" default="dev">
+        <description>
+                Hippie - Monitors external service endpoints from
+                integration tests by automatically sending Nagios
+                passive service checks
+        </description>
+
+        <property name="project.root" location="${basedir}"/>
+
+        <import file="${project.root}/build-properties.xml"/>
+        <import file="${project.root}/build-dependencies.xml"/>
+        <import file="build-paths.xml"/>
+
+        <!-- Public targets -->
+        <target name="bump-major" depends="-bump-major"
+                description="--> Bumps major version number"/>
+        <target name="bump-minor" depends="-bump-minor"
+                description="--> Bumps minor version number"/>
+        <target name="clean" depends="-clean"
+                description="--> Cleans all subprojects"/>
+        <target name="dev" depends="-dev"
+                description="--> Compiles and tests all subprojects"/>
+        <target name="release" depends="-release"
+                description="--> Packages all subprojects and creates a complete binary distribution"/>
+
+        <!-- Target dependencies -->
+        <target name="-bump" depends="-build-numbers-file,--bump"/>
+        <target name="-bump-major"
+                depends="-build-numbers-file,--bump-major,--zero-minor,--zero"/>
+        <target name="-bump-minor"
+                depends="-build-numbers-file,--bump-minor,--zero"/>
+        <target name="-build-numbers-file"
+                depends="--check-build-numbers-file,--create-build-numbers-file"/>
+        <target name="-clean" depends="--clean"/>
+        <target name="-compile"
+                depends="--compile-init,--compile,--compile-copy-resources"/>
+        <target name="-dev" depends="-compile,-test"/>
+        <target name="-javadoc" depends="--javadoc-init,--javadoc"/>
+        <target name="-package"
+                depends="-javadoc,--package-init,--package-jar,--package-docs"/>
+        <target name="-release"
+                depends="-package,--release-init,--release,--release-docs-init,--release-docs,-bump"/>
+        <target name="-test-unit"
+                depends="--test-unit-init,--test-unit-compile,--test-unit-copy-resources,--test-unit-coverage-init,--test-unit,--test-unit-report,--test-unit-coverage-report"/>
+        <target name="-test" depends="-test-unit,--checkstyle"/>
+
+        <!-- Target definitions -->
+        <path id="cobertura.classpath">
+                <fileset refid="cobertura.lib"/>
+                <fileset dir="${libs}/cobertura/v1.9.3">
+                        <include name="lib/**/*.jar"/>
+                </fileset>
+        </path>
+        <taskdef classpathref="cobertura.classpath"
+                 resource="tasks.properties"/>
+
+        <path id="checkstyle.classpath">
+                <fileset refid="checkstyle.lib"/>
+        </path>
+        <taskdef classpathref="checkstyle.classpath"
+                 resource="checkstyletask.properties"/>
+
+        <macrodef name="_bump-number">
+                <attribute name="level" default="build.number"/>
+                <sequential>
+                        <propertyfile
+                            file="${project.root}/build-numbers.properties"
+                            comment=" Version numbers">
+                                <entry key="@{level}" default="0"
+                                       type="int" operation="+"/>
+                        </propertyfile>
+                </sequential>
+        </macrodef>
+
+        <macrodef name="_zero-number">
+                <attribute name="level" default="build.number"/>
+                <sequential>
+                        <propertyfile
+                            file="${project.root}/build-numbers.properties"
+                            comment=" Version numbers">
+                                <entry key="@{level}" value="0"
+                                       default="0" type="int"/>
+                        </propertyfile>
+                </sequential>
+        </macrodef>
+
+        <target name="--check-build-numbers-file">
+                <available
+                    file="${project.root}/build-numbers.properties"
+                    property="build.numbers.file.exists"/>
+        </target>
+
+        <target name="--create-build-numbers-file"
+                unless="build.numbers.file.exists">
+                <propertyfile
+                    file="${project.root}/build-numbers.properties"
+                    comment=" Version numbers">
+                        <entry key="build.major"
+                               default="${build.major}" type="int"/>
+                        <entry key="build.minor"
+                               default="${build.minor}" type="int"/>
+                        <entry key="build.number"
+                               default="${build.number}" type="int"/>
+                </propertyfile>
+        </target>
+
+        <target name="--bump">
+                <_bump-number/>
+        </target>
+
+        <target name="--bump-major">
+                <_bump-number level="build.major"/>
+        </target>
+
+        <target name="--bump-minor">
+                <_bump-number level="build.minor"/>
+        </target>
+
+        <target name="--zero">
+                <_zero-number/>
+        </target>
+
+        <target name="--zero-minor">
+                <_zero-number level="build.minor"/>
+        </target>
+
+        <target name="--clean">
+                <delete dir="target"/>
+        </target>
+
+        <target name="--compile-init">
+                <available property="should.compile"
+                           file="src/main/java"/>
+                <available property="should.compile.copy.resources"
+                           file="src/main/resources"/>
+                <mkdir dir="target/main/classes"/>
+        </target>
+
+        <target name="--compile" if="should.compile">
+                <javac srcdir="src/main/java"
+                       destdir="target/main/classes"
+                       classpathref="compile.path" debug="on"
+                       target="1.5"/>
+        </target>
+
+        <target name="--compile-copy-resources"
+                if="should.compile.copy.resources">
+                <copy todir="target/main/classes"
+                      includeEmptyDirs="false">
+                        <fileset dir="src/main/resources"
+                                 excludes="**/.DS_Store"/>
+                </copy>
+        </target>
+
+        <target name="--javadoc-init">
+                <available property="should.javadoc"
+                           file="src/main/java"/>
+                <mkdir
+                    dir="target/docs/${ant.project.name}-${version.number}/api"/>
+        </target>
+
+        <target name="--javadoc" if="should.javadoc">
+                <javadoc
+                    destdir="target/docs/${ant.project.name}-${version.number}/api"
+                    breakiterator="yes" failonerror="true"
+                    classpathref="compile.out">
+                        <packageset dir="src/main/java"/>
+                </javadoc>
+        </target>
+
+        <target name="--package-init">
+                <mkdir dir="target/dist"/>
+        </target>
+
+        <target name="--package-jar">
+                <jar
+                    destfile="target/dist/${ant.project.name}-${version.number}.jar"
+                    duplicate="fail">
+                        <fileset dir="target/main/classes"/>
+                </jar>
+        </target>
+
+        <target name="--package-docs">
+                <zip
+                    destfile="target/dist/${ant.project.name}-docs-${version.number}.zip"
+                    duplicate="fail">
+                        <fileset dir="target/docs"
+                                 includes="${ant.project.name}-${version.number}/**"/>
+                </zip>
+        </target>
+
+        <target name="--package-src-init">
+                <mkdir
+                    dir="target/src/${ant.project.name}-${version.number}"/>
+                <copy
+                    todir="target/src/${ant.project.name}-${version.number}"
+                    includeEmptyDirs="true" failonerror="false">
+                        <fileset dir="."
+                                 excludes="**/.DS_Store,**/.git/,**/target/"/>
+                </copy>
+        </target>
+
+        <target name="--package-src">
+                <zip
+                    destfile="target/dist/${ant.project.name}-src-${version.number}.zip"
+                    duplicate="fail">
+                        <fileset dir="target/src"
+                                 includes="${ant.project.name}-${version.number}/**"/>
+                </zip>
+        </target>
+
+        <target name="--release-init">
+                <mkdir dir="${project.root}/target/dist"/>
+                <mkdir dir="${project.root}/target/modules/jars"/>
+                <copy todir="${project.root}/target/modules/jars"
+                      flatten="true">
+                        <fileset dir="${project.root}"
+                                 includes="*/target/dist/*-${version.number}.jar"/>
+                </copy>
+        </target>
+
+        <target name="--release-clean">
+                <delete dir="${project.root}/target"/>
+        </target>
+
+        <target name="--release">
+                <zip
+                    destfile="${project.root}/target/dist/${ant.project.name}-${version.number}.zip"
+                    duplicate="fail">
+                        <fileset
+                            dir="${project.root}/target/modules/jars"
+                            includes="*-${version.number}.jar"/>
+                </zip>
+        </target>
+
+        <target name="--release-docs-init">
+                <mkdir dir="${project.root}/target/modules/docs"/>
+                <copy todir="${project.root}/target/modules/docs"
+                      flatten="true">
+                        <fileset dir="${project.root}"
+                                 includes="*/target/dist/*-docs-${version.number}.zip"/>
+                </copy>
+        </target>
+
+        <target name="--release-docs">
+                <zip
+                    destfile="${project.root}/target/dist/${ant.project.name}-docs-${version.number}.zip"
+                    duplicate="fail">
+                        <fileset
+                            dir="${project.root}/target/modules/docs"
+                            includes="*-docs-${version.number}.zip"/>
+                </zip>
+        </target>
+
+        <target name="--release-src-init">
+                <mkdir
+                    dir="${project.root}/target/src/${ant.project.name}-${version.number}"/>
+                <copy
+                    todir="${project.root}/target/src/${ant.project.name}-${version.number}"
+                    includeEmptyDirs="true"
+                    failonerror="false">
+                        <fileset dir="${project.root}"
+                                 excludes="**/.DS_Store,**/.git/,**/target/"/>
+                </copy>
+        </target>
+
+        <target name="--release-src">
+                <zip
+                    destfile="${project.root}/target/dist/${ant.project.name}-src-${version.number}.zip"
+                    duplicate="fail">
+                        <fileset dir="${project.root}/target/src"
+                                 includes="${ant.project.name}-${version.number}/**"/>
+                </zip>
+        </target>
+
+        <target name="--checkstyle">
+                <mkdir dir="target/checkstyle"/>
+                <checkstyle failOnViolation="false"
+                            config="${project.root}/checkstyle.xml">
+                        <property key="checkstyle.cache.file"
+                                  file="target/checkstyle/cachefile"/>
+                        <property key="basedir" value="${project.root}"/>
+                        <fileset dir="src/main/java"
+                                 includes="**/*.java"/>
+                        <formatter type="xml"
+                                   toFile="${project.root}/target/checkstyle/checkstyle_errors.xml"/>
+                </checkstyle>
+                <xslt in="target/checkstyle/checkstyle_errors.xml"
+                      out="target/checkstyle/checkstyle_report.html"
+                      style="${libs}/checkstyle/v5.0/contrib/checkstyle-simple.xsl"/>
+        </target>
+
+        <target name="--test-unit-init">
+                <available property="should.test.unit"
+                           file="test/unit/java"/>
+                <available property="should.test.unit.copy.resources"
+                           file="test/unit/resources"/>
+                <mkdir dir="target/test/unit/classes"/>
+                <mkdir dir="target/test/unit/results"/>
+                <mkdir dir="target/test/reports/unit"/>
+        </target>
+
+        <target name="--test-unit-compile" if="should.test.unit">
+                <javac srcdir="test/unit/java"
+                       destdir="target/test/unit/classes"
+                       classpathref="test.unit.compile.path"
+                       debug="on"/>
+        </target>
+
+        <target name="--test-unit-copy-resources"
+                if="should.test.unit.copy.resources">
+                <copy todir="target/test/unit/classes">
+                        <fileset dir="test/unit/resources"
+                                 excludes="**/.DS_Store"/>
+                </copy>
+        </target>
+
+        <target name="--test-unit-coverage-init" if="should.test.unit">
+                <delete file="target/test/unit/cobertura.ser"/>
+                <delete dir="target/test/unit/instrumented"
+                        quiet="true"/>
+
+                <cobertura-instrument
+                    datafile="target/test/unit/cobertura.ser"
+                    todir="target/test/unit/instrumented">
+                        <fileset dir="target/main/classes">
+                                <include name="**/*.class"/>
+                                <exclude name="**/*Tests.class"/>
+                        </fileset>
+                </cobertura-instrument>
+        </target>
+
+        <target name="--test-unit" if="should.test.unit">
+                <junit haltonfailure="yes" fork="yes" forkmode="once"
+                       printsummary="no">
+                        <classpath
+                            location="target/test/unit/instrumented"/>
+                        <classpath refid="test.unit.run.path"/>
+                        <classpath refid="cobertura.classpath"/>
+
+                        <sysproperty
+                            key="net.sourceforge.cobertura.datafile"
+                            file="target/test/unit/cobertura.ser"/>
+
+                        <formatter type="brief" usefile="no"/>
+                        <formatter type="xml" usefile="yes"/>
+
+                        <batchtest fork="yes"
+                                   todir="target/test/unit/results">
+                                <fileset dir="test/unit/java">
+                                        <include name="**/*Tests.java"/>
+                                </fileset>
+                        </batchtest>
+                </junit>
+        </target>
+
+        <target name="--test-unit-report" if="should.test.unit">
+                <junitreport todir="target/test/reports/unit">
+                        <fileset dir="target/test/unit/results">
+                                <include name="TEST-*.xml"/>
+                        </fileset>
+                        <report format="frames"
+                                todir="target/test/reports/unit/html"/>
+                </junitreport>
+        </target>
+
+        <target name="--test-unit-coverage-report"
+                if="should.test.unit">
+                <cobertura-report format="html"
+                                  datafile="target/test/unit/cobertura.ser"
+                                  destdir="target/test/reports/unit/coverage"
+                                  srcdir="src/main/java"/>
+                <fileset dir="src/main/java">
+                        <include name="**/*.java"/>
+                </fileset>
+        </target>
+</project>

@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<project>
+        <description>
+                Classpaths
+        </description>
+
+        <import file="${project.root}/build-dependencies.xml"/>
+
+        <path id="compile.path">
+                <fileset refid="jsendnsca.core.lib"/>
+                <fileset refid="junit.lib"/>
+        </path>
+
+        <path id="compile.out">
+                <path refid="compile.path"/>
+                <pathelement location="target/main/classes"/>
+        </path>
+
+        <path id="test.unit.compile.path">
+                <path refid="compile.out"/>
+                <fileset refid="mockito.lib"/>
+        </path>
+
+        <path id="test.unit.run.path">
+                <path refid="test.unit.compile.path"/>
+                <pathelement location="target/test/unit/classes"/>
+        </path>
+</project>

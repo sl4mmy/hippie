@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<project>
+        <description>
+                Common build properties
+        </description>
+
+        <property name="libs" location="${project.root}/libs"/>
+
+        <property file="${project.root}/build-numbers.properties"/>
+        <!-- Default build numbers in absence of build-numbers.properties -->
+        <property name="build.major" value="0"/>
+        <property name="build.minor" value="99"/>
+        <property name="build.number" value="0"/>
+        <property name="version.number"
+                  value="${build.major}.${build.minor}.${build.number}"/>
+</project>

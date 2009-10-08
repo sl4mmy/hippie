@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<project>
+        <description>
+                Common third-party dependencies
+        </description>
+
+        <fileset id="checkstyle.lib"
+                 file="${libs}/checkstyle/v5.0/checkstyle-all-5.0.jar"/>
+        <fileset id="cobertura.lib"
+                 file="${libs}/cobertura/v1.9.3/cobertura.jar"/>
+        <fileset id="jsendnsca.core.lib"
+                 file="${libs}/jsendnsca/v1.2/jsendnsca-core-1.2.jar"/>
+        <fileset id="junit.lib"
+                 file="${libs}/junit/v4.7/junit-4.7.jar"/>
+        <fileset id="mockito.lib"
+                 file="${libs}/mockito/v1.8.0/mockito-all-1.8.0.jar"/>
+</project>
