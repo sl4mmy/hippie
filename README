@@ -48,8 +48,7 @@ public class IntegrationSmokeTests {
         public void awesomeServiceShouldBeAvailable() throws Exception {
                 final Service undocumented = new UndocumentedService();
 
-                // TODO: figure out the correct order to call of these
-                // calls:
+                // TODO: figure out the correct order of these calls:
                 /*
                 undocumented.setListener(Environments.INTEGRATION_TEST);
                 undocumented.initialize();
