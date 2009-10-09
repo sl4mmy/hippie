@@ -33,7 +33,8 @@ public class NagiosNotifier {
         private final NagiosPassiveCheckSender notifier;
 
         public NagiosNotifier(final String host, final String password,
-            final int port, final int connectionTimeout, final int responseTimeout) {
+            final int port, final int connectionTimeout,
+            final int responseTimeout) {
                 final NagiosSettings settings =
                     NagiosSettingsBuilder.withNagiosHost(host)
                         .withPassword(password)

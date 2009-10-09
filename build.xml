@@ -38,9 +38,9 @@
         <target name="-dev" depends="-compile,-test"/>
         <target name="-javadoc" depends="--javadoc-init,--javadoc"/>
         <target name="-package"
-                depends="-javadoc,--package-init,--package-jar,--package-docs"/>
+                depends="-javadoc,--package-init,--package-jar,--package-docs,--package-src-init,--package-src"/>
         <target name="-release"
-                depends="-package,--release-init,--release,--release-docs-init,--release-docs,-bump"/>
+                depends="-package,--release-init,--release,--release-docs-init,--release-docs,--release-src-init,--release-src,-bump"/>
         <target name="-test-unit"
                 depends="--test-unit-init,--test-unit-compile,--test-unit-copy-resources,--test-unit-coverage-init,--test-unit,--test-unit-report,--test-unit-coverage-report"/>
         <target name="-test" depends="-test-unit,--checkstyle"/>
@@ -216,12 +216,8 @@
                 <copy todir="${project.root}/target/modules/jars"
                       flatten="true">
                         <fileset dir="${project.root}"
-                                 includes="*/target/dist/*-${version.number}.jar"/>
+                                 includes="target/dist/*-${version.number}.jar"/>
                 </copy>
-        </target>
-
-        <target name="--release-clean">
-                <delete dir="${project.root}/target"/>
         </target>
 
         <target name="--release">
@@ -239,7 +235,7 @@
                 <copy todir="${project.root}/target/modules/docs"
                       flatten="true">
                         <fileset dir="${project.root}"
-                                 includes="*/target/dist/*-docs-${version.number}.zip"/>
+                                 includes="target/dist/*-docs-${version.number}.zip"/>
                 </copy>
         </target>
 
@@ -277,18 +273,24 @@
         <target name="--checkstyle">
                 <mkdir dir="target/checkstyle"/>
                 <checkstyle failOnViolation="false"
+                            failureProperty="checkstyle.errors"
                             config="${project.root}/checkstyle.xml">
+                        <classpath>
+                                <path refid="compile.out"/>
+                        </classpath>
                         <property key="checkstyle.cache.file"
                                   file="target/checkstyle/cachefile"/>
-                        <property key="basedir" value="${project.root}"/>
                         <fileset dir="src/main/java"
                                  includes="**/*.java"/>
+                        <formatter type="plain"/>
                         <formatter type="xml"
                                    toFile="${project.root}/target/checkstyle/checkstyle_errors.xml"/>
                 </checkstyle>
                 <xslt in="target/checkstyle/checkstyle_errors.xml"
                       out="target/checkstyle/checkstyle_report.html"
                       style="${libs}/checkstyle/v5.0/contrib/checkstyle-simple.xsl"/>
+                <fail if="checkstyle.errors"
+                      message="Please remember to flush after coding"/>
         </target>
 
         <target name="--test-unit-init">
