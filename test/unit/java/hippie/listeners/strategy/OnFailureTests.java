@@ -68,6 +68,7 @@ public class OnFailureTests {
         public void shouldNotifyNagiosOfFailingServiceCheckWhenExecuting()
             throws Exception {
                 when(annotation.name()).thenReturn("SERVICE NAME");
+                when(annotation.onHost()).thenReturn("SERVICE HOST");
                 when(annotation.failureMessage())
                     .thenReturn("FAILURE MESSAGE");
 
@@ -75,8 +76,8 @@ public class OnFailureTests {
 
                 strategy.execute(annotation);
 
-                verify(notifier)
-                    .failed("SERVICE NAME", "FAILURE MESSAGE");
+                verify(notifier).failed("SERVICE NAME", "SERVICE HOST",
+                    "FAILURE MESSAGE");
         }
 
         @Test

@@ -68,6 +68,7 @@ public class OnIgnoredTests {
         public void shouldNotifyNagiosOfIgnoredServiceCheckWhenExecuting()
             throws Exception {
                 when(annotation.name()).thenReturn("SERVICE NAME");
+                when(annotation.onHost()).thenReturn("SERVICE HOST");
                 when(annotation.ignoredMessage())
                     .thenReturn("IGNORED MESSAGE");
 
@@ -75,8 +76,8 @@ public class OnIgnoredTests {
 
                 strategy.execute(annotation);
 
-                verify(notifier)
-                    .ignored("SERVICE NAME", "IGNORED MESSAGE");
+                verify(notifier).ignored("SERVICE NAME", "SERVICE HOST",
+                    "IGNORED MESSAGE");
         }
 
         @Test

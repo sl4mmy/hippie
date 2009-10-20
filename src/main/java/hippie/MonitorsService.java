@@ -29,6 +29,8 @@ import java.lang.annotation.Target;
 public @interface MonitorsService {
         String name();
 
+        String onHost();
+
         String failureMessage() default "is not responding correctly.";
 
         String ignoredMessage() default "was ignored.";

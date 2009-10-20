@@ -36,7 +36,9 @@ public class ServiceMonitor extends TestWatchman {
                     method.getAnnotation(MonitorsService.class);
 
                 if (annotation != null) {
-                        notifier.succeeded(annotation.name(),
+                        final String serviceName = annotation.name();
+                        final String serviceHost = annotation.onHost();
+                        notifier.succeeded(serviceName, serviceHost,
                             annotation.successMessage());
                 }
         }
@@ -48,7 +50,9 @@ public class ServiceMonitor extends TestWatchman {
                     method.getAnnotation(MonitorsService.class);
 
                 if (annotation != null) {
-                        notifier.failed(annotation.name(),
+                        final String serviceName = annotation.name();
+                        final String serviceHost = annotation.onHost();
+                        notifier.failed(serviceName, serviceHost,
                             annotation.failureMessage());
                 }
         }

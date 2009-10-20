@@ -28,13 +28,13 @@ public class ExampleNagiosAwareTest {
         }
 
         @Test
-        @MonitorsService(name = "foo/bar(baz)")
+        @MonitorsService(name = "foo/bar(baz)", onHost = "localhost")
         public void foo() {
                 fail("nagios sucks");
         }
 
         @Test
-        @MonitorsService(name = "hello!!!!!!")
+        @MonitorsService(name = "hello!!!!!!", onHost = "localhost")
         public void bar() {
         }
 }

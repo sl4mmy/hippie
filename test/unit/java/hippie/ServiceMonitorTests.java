@@ -56,6 +56,7 @@ public class ServiceMonitorTests {
                 final MonitorsService annotation =
                     mock(MonitorsService.class);
                 when(annotation.name()).thenReturn("SERVICE NAME");
+                when(annotation.onHost()).thenReturn("SERVICE HOST");
                 when(annotation.failureMessage())
                     .thenReturn("FAILURE MESSAGE");
                 when(method.getAnnotation(MonitorsService.class))
@@ -66,8 +67,8 @@ public class ServiceMonitorTests {
 
                 watchman.failed(cause, method);
 
-                verify(notifier)
-                    .failed("SERVICE NAME", "FAILURE MESSAGE");
+                verify(notifier).failed("SERVICE NAME", "SERVICE HOST",
+                    "FAILURE MESSAGE");
         }
 
         @Test
@@ -90,6 +91,7 @@ public class ServiceMonitorTests {
                 final MonitorsService annotation =
                     mock(MonitorsService.class);
                 when(annotation.name()).thenReturn("SERVICE NAME");
+                when(annotation.onHost()).thenReturn("SERVICE HOST");
                 when(annotation.successMessage())
                     .thenReturn("SUCCESS MESSAGE");
                 when(method.getAnnotation(MonitorsService.class))
@@ -101,7 +103,8 @@ public class ServiceMonitorTests {
                 watchman.succeeded(method);
 
                 verify(notifier)
-                    .succeeded("SERVICE NAME", "SUCCESS MESSAGE");
+                    .succeeded("SERVICE NAME", "SERVICE HOST",
+                        "SUCCESS MESSAGE");
         }
 
         @Test
@@ -119,7 +122,6 @@ public class ServiceMonitorTests {
         }
 
         public static junit.framework.Test suite() {
-                return new JUnit4TestAdapter(
-                    ServiceMonitorTests.class);
+                return new JUnit4TestAdapter(ServiceMonitorTests.class);
         }
 }

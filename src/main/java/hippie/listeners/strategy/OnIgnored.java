@@ -30,10 +30,11 @@ public class OnIgnored implements Strategy {
         }
 
         public void execute(final MonitorsService annotation) {
-                final String name = annotation.name();
+                final String serviceName = annotation.name();
+                final String serviceHost = annotation.onHost();
                 final String message = annotation.ignoredMessage();
 
-                notifier.ignored(name, message);
+                notifier.ignored(serviceName, serviceHost, message);
         }
 
         public OnFailure failed() {

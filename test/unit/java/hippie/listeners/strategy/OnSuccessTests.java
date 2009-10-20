@@ -68,6 +68,7 @@ public class OnSuccessTests {
         public void shouldNotifyNagiosOfSuccessfulServiceCheckWhenExecuting()
             throws Exception {
                 when(annotation.name()).thenReturn("SERVICE NAME");
+                when(annotation.onHost()).thenReturn("SERVICE HOST");
                 when(annotation.successMessage())
                     .thenReturn("SUCCESS MESSAGE");
 
@@ -76,7 +77,8 @@ public class OnSuccessTests {
                 strategy.execute(annotation);
 
                 verify(notifier)
-                    .succeeded("SERVICE NAME", "SUCCESS MESSAGE");
+                    .succeeded("SERVICE NAME", "SERVICE HOST",
+                        "SUCCESS MESSAGE");
         }
 
         @Test

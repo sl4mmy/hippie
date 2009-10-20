@@ -22,7 +22,7 @@ public class IntegrationSmokeTests {
         }
 
         @Test
-        @MonitorsService(name = "AwesomeService")
+        @MonitorsService(name = "AwesomeService", onHost = "qa.env")
         public void awesomeServiceShouldBeAvailable() throws Exception {
                 final Service awesome = new AwesomeService();
 
@@ -33,7 +33,7 @@ public class IntegrationSmokeTests {
         }
 
         @Test
-        @MonitorsService(name = "Google",
+        @MonitorsService(name = "Google", onHost = "google.com",
             failureMessage = "Google should never be down, so something must be terribly wrong!")
         public void googleShouldNeverBeDown() throws Exception {
                 final Service google = new GoogleService();
@@ -43,7 +43,7 @@ public class IntegrationSmokeTests {
 
         @Ignore
         @Test
-        @MonitorsService(name = "UndocumentedService",
+        @MonitorsService(name = "UndocumentedService", onHost = "dev",
             ignoredMessage = "ignoring until we finish reverse-engineering this undocumented API")
         public void awesomeServiceShouldBeAvailable() throws Exception {
                 final Service undocumented = new UndocumentedService();
@@ -60,7 +60,7 @@ public class IntegrationSmokeTests {
         }
 
         @Test
-        @MonitorsService(name = "UnstableService",
+        @MonitorsService(name = "UnstableService", onHost = "test",
             successMessage = "I can't believe it actually worked!")
         public void awesomeServiceShouldBeAvailable() throws Exception {
                 final Service unstable = new UnstableService();
@@ -71,7 +71,7 @@ public class IntegrationSmokeTests {
         }
 
         @Test
-        @MonitorsService(name = "UberService",
+        @MonitorsService(name = "UberService", onHost = "production.env",
             failureMessage = "can't connect!",
             ignoredMessage = "fiddling with something",
             successMessage = "all systems are go!")

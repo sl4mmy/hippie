@@ -22,33 +22,27 @@ import com.googlecode.jsendnsca.core.NagiosSettings;
 import com.googlecode.jsendnsca.core.builders.MessagePayloadBuilder;
 import com.googlecode.jsendnsca.core.builders.NagiosSettingsBuilder;
 
-import java.net.InetAddress;
-
 /**
  * Understands how to send NSCA passive service checks.
  */
 public class NagiosNotifier {
-        private final String localhost;
-
         private final NagiosPassiveCheckSender notifier;
 
-        public NagiosNotifier(final String host, final String password,
-            final int port, final int connectionTimeout,
-            final int responseTimeout) {
+        public NagiosNotifier(final String nscaServer,
+            final String nscaPassword, final int nscaPort,
+            final int connectionTimeout, final int responseTimeout) {
                 final NagiosSettings settings =
-                    NagiosSettingsBuilder.withNagiosHost(host)
-                        .withPassword(password)
-                        .withPort(port)
+                    NagiosSettingsBuilder.withNagiosHost(nscaServer)
+                        .withPassword(nscaPassword).withPort(nscaPort)
                         .withConnectionTimeout(connectionTimeout)
                         .withResponseTimeout(responseTimeout).create();
-                this.localhost = getCanonicalLocalHostName();
                 this.notifier = new NagiosPassiveCheckSender(settings);
         }
 
         public void failed(final String serviceName,
-            final String message) {
+            final String serviceHost, final String message) {
                 final MessagePayload notification =
-                    MessagePayloadBuilder.withHostname(localhost)
+                    MessagePayloadBuilder.withHostname(serviceHost)
                         .withLevel(Level.CRITICAL)
                         .withServiceName(serviceName)
                         .withMessage(message).create();
@@ -56,9 +50,9 @@ public class NagiosNotifier {
         }
 
         public void ignored(final String serviceName,
-            final String message) {
+            final String serviceHost, final String message) {
                 final MessagePayload notification =
-                    MessagePayloadBuilder.withHostname(localhost)
+                    MessagePayloadBuilder.withHostname(serviceHost)
                         .withLevel(Level.UNKNOWN)
                         .withServiceName(serviceName)
                         .withMessage(message).create();
@@ -66,22 +60,13 @@ public class NagiosNotifier {
         }
 
         public void succeeded(final String serviceName,
-            final String message) {
+            final String serviceHost, final String message) {
                 final MessagePayload notification =
-                    MessagePayloadBuilder.withHostname(localhost)
+                    MessagePayloadBuilder.withHostname(serviceHost)
                         .withLevel(Level.OK)
                         .withServiceName(serviceName)
                         .withMessage(message).create();
                 send(notification);
-        }
-
-        private String getCanonicalLocalHostName() {
-                try {
-                        return InetAddress.getLocalHost()
-                            .getCanonicalHostName();
-                } catch (Exception e) {
-                        return "localhost";
-                }
         }
 
         private void send(final MessagePayload notification) {

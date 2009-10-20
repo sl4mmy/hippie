@@ -82,7 +82,8 @@ public class MonitorsServiceTests {
 
         private MonitorsService withNameOnly() throws Exception {
                 class DoesNotMatter {
-                        @MonitorsService(name = "DOES NOT MATTER")
+                        @MonitorsService(name = "DOES NOT MATTER",
+                            onHost = "DOES NOT MATTER")
                         public void doesNotMatter() {
 
                         }

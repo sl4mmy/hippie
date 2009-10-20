@@ -30,10 +30,11 @@ public class OnSuccess implements Strategy {
         }
 
         public void execute(final MonitorsService annotation) {
-                final String name = annotation.name();
+                final String serviceName = annotation.name();
+                final String serviceHost = annotation.onHost();
                 final String message = annotation.successMessage();
 
-                notifier.succeeded(name, message);
+                notifier.succeeded(serviceName, serviceHost, message);
         }
 
         public OnFailure failed() {

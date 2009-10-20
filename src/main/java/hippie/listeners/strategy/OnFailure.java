@@ -30,10 +30,11 @@ public class OnFailure implements Strategy {
         }
 
         public void execute(final MonitorsService annotation) {
-                final String name = annotation.name();
+                final String serviceName = annotation.name();
+                final String serviceHost = annotation.onHost();
                 final String message = annotation.failureMessage();
 
-                notifier.failed(name, message);
+                notifier.failed(serviceName, serviceHost, message);
         }
 
         public OnFailure failed() {
