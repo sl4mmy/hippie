@@ -21,7 +21,7 @@ public class IntegrationSmokeTests {
 
         private String serviceHost = "services.box";
 
-        private NagiosNotifier notifier = new NagiosNotifier(nsaServer,
+        private NagiosNotifier notifier = new NagiosNotifier(nscaServer,
                 nscaPassword, nscaPort, nscaConnectionTimeout,
                 nscaResponseTimeout);
 
