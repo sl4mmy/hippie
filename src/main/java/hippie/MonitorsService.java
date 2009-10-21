@@ -29,7 +29,7 @@ import java.lang.annotation.Target;
 public @interface MonitorsService {
         String name();
 
-        String onHost();
+        String onHost() default "";
 
         String failureMessage() default "is not responding correctly.";
 

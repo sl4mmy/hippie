@@ -46,6 +46,13 @@ public class MonitorsServiceTests {
         }
 
         @Test
+        public void shouldDefaultServiceHostName() throws Exception {
+                final MonitorsService annotation = withNameOnly();
+
+                assertEquals("", annotation.onHost());
+        }
+
+        @Test
         public void shouldDefaultFailureMessage() throws Exception {
                 final MonitorsService annotation = withNameOnly();
 
@@ -82,8 +89,7 @@ public class MonitorsServiceTests {
 
         private MonitorsService withNameOnly() throws Exception {
                 class DoesNotMatter {
-                        @MonitorsService(name = "DOES NOT MATTER",
-                            onHost = "DOES NOT MATTER")
+                        @MonitorsService(name = "DOES NOT MATTER")
                         public void doesNotMatter() {
 
                         }
