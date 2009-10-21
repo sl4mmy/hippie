@@ -4,6 +4,97 @@ Monitors external service endpoints from integration tests by automatically send
 
 h2. Example
 
+If you are using JUnit v4.7 or later, you can use the JUnit Rule API to
+write integration tests in the following style:
+<pre><code>
+public class IntegrationSmokeTests {
+        private String nscaServer = "nagios.box";
+
+        private String nscaPassword = "password";
+
+        private int nscaPort = 5667;
+
+        private int nscaConnectionTimeout = 5000;  // ms
+
+        private int nscaResponseTimeout = 15000;  // ms
+
+        private String serviceHost = "services.box";
+
+        private NagiosNotifier notifier = new NagiosNotifier(nsaServer,
+                nscaPassword, nscaPort, nscaConnectionTimeout,
+                nscaResponseTimeout);
+
+        @Rule ServiceMonitor monitor = new ServiceMonitor(serviceHost,
+                notifier);
+
+        @Test
+        @MonitorsService(name = "AwesomeService")
+        public void awesomeServiceShouldBeAvailable() throws Exception {
+                final Service awesome = new AwesomeService();
+
+                smokeTest(awesome);
+
+                assertEquals(Service.AVAILABLE, awesome.getStatus());
+                assertEquals(Service.CORRECT, awesome.getResponse());
+        }
+
+        @Test
+        @MonitorsService(name = "Google", onHost = "google.com",
+            failureMessage = "Google should never be down, so something must be terribly wrong!")
+        public void googleShouldNeverBeDown() throws Exception {
+                final Service google = new GoogleService();
+
+                assertEquals(Service.AVAILABLE, google.ping());
+        }
+
+        @Ignore
+        @Test
+        @MonitorsService(name = "UndocumentedService",
+            ignoredMessage = "ignoring until we finish reverse-engineering this undocumented API")
+        public void awesomeServiceShouldBeAvailable() throws Exception {
+                final Service undocumented = new UndocumentedService();
+
+                // TODO: figure out the correct order of these calls:
+                /*
+                undocumented.setListener(Environments.INTEGRATION_TEST);
+                undocumented.initialize();
+                final Token token = undocumented.getRequestToken();
+                final Service.Response response = undocumented.invoke(token);
+                */
+
+                assertEquals(Service.CORRECT, response.validate());
+        }
+
+        @Test
+        @MonitorsService(name = "UnstableService",
+            successMessage = "I can't believe it actually worked!")
+        public void awesomeServiceShouldBeAvailable() throws Exception {
+                final Service unstable = new UnstableService();
+
+                final Response response = unstable.invoke();
+
+                assertEquals(Service.AVAILABLE, response.getStatus());
+        }
+
+        @Test
+        @MonitorsService(name = "UberService",
+            failureMessage = "can't connect!",
+            ignoredMessage = "fiddling with something",
+            successMessage = "all systems are go!")
+        public void awesomeServiceShouldBeAvailable() throws Exception {
+                final Service uber = new UberService();
+
+                smokeTest(uber);
+
+                assertEquals(Service.AVAILABLE, uber.getStatus());
+                assertEquals(Service.CORRECT, uber.getResponse());
+        }
+}
+</code></pre>
+
+If you are using JUnit v4.6 or earlier, you must write your hippie tests
+in the following style (which also works with JUnit v4.7+, but is not
+preferred):
 <pre><code>
 @RunWith(NagiosAwareRunner.class)
 public class IntegrationSmokeTests {
