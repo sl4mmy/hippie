@@ -40,7 +40,7 @@
         <target name="-package"
                 depends="-javadoc,--package-init,--package-jar,--package-docs,--package-src-init,--package-src"/>
         <target name="-release"
-                depends="-package,--release-init,--release,--release-docs-init,--release-docs,--release-src-init,--release-src,-bump"/>
+                depends="-package,--release-init,--release,-bump"/>
         <target name="-test-unit"
                 depends="--test-unit-init,--test-unit-compile,--test-unit-copy-resources,--test-unit-coverage-init,--test-unit,--test-unit-report,--test-unit-coverage-report"/>
         <target name="-test" depends="-test-unit,--checkstyle"/>
@@ -211,62 +211,19 @@
         </target>
 
         <target name="--release-init">
-                <mkdir dir="${project.root}/target/dist"/>
-                <mkdir dir="${project.root}/target/modules/jars"/>
-                <copy todir="${project.root}/target/modules/jars"
-                      flatten="true">
-                        <fileset dir="${project.root}"
-                                 includes="target/dist/*-${version.number}.jar"/>
+                <copy todir="${project.root}/target/dist">
+                        <fileset dir="${project.root}">
+                                <include name="LICENSE"/>
+                                <include name="README"/>
+                        </fileset>
                 </copy>
         </target>
 
         <target name="--release">
-                <zip
-                    destfile="${project.root}/target/dist/${ant.project.name}-${version.number}.zip"
+                <zip destfile="${project.root}/target/${ant.project.name}-${version.number}.zip"
                     duplicate="fail">
-                        <fileset
-                            dir="${project.root}/target/modules/jars"
-                            includes="*-${version.number}.jar"/>
-                </zip>
-        </target>
-
-        <target name="--release-docs-init">
-                <mkdir dir="${project.root}/target/modules/docs"/>
-                <copy todir="${project.root}/target/modules/docs"
-                      flatten="true">
-                        <fileset dir="${project.root}"
-                                 includes="target/dist/*-docs-${version.number}.zip"/>
-                </copy>
-        </target>
-
-        <target name="--release-docs">
-                <zip
-                    destfile="${project.root}/target/dist/${ant.project.name}-docs-${version.number}.zip"
-                    duplicate="fail">
-                        <fileset
-                            dir="${project.root}/target/modules/docs"
-                            includes="*-docs-${version.number}.zip"/>
-                </zip>
-        </target>
-
-        <target name="--release-src-init">
-                <mkdir
-                    dir="${project.root}/target/src/${ant.project.name}-${version.number}"/>
-                <copy
-                    todir="${project.root}/target/src/${ant.project.name}-${version.number}"
-                    includeEmptyDirs="true"
-                    failonerror="false">
-                        <fileset dir="${project.root}"
-                                 excludes="**/.DS_Store,**/.git/,**/target/"/>
-                </copy>
-        </target>
-
-        <target name="--release-src">
-                <zip
-                    destfile="${project.root}/target/dist/${ant.project.name}-src-${version.number}.zip"
-                    duplicate="fail">
-                        <fileset dir="${project.root}/target/src"
-                                 includes="${ant.project.name}-${version.number}/**"/>
+                        <zipfileset dir="${project.root}/target/dist"
+                            prefix="${ant.project.name}-${version.number}"/>
                 </zip>
         </target>
 
