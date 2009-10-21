@@ -61,18 +61,18 @@ public class NagiosAwareRunner extends Runner {
 
         private RunListener initializeListener() {
                 final String nagiosServer =
-                    configuration.getProperty("hippie.nagios.server");
+                    configuration.getProperty("hippie.nsca.server");
                 final String nagiosPassword =
-                    configuration.getProperty("hippie.nagios.password");
+                    configuration.getProperty("hippie.nsca.password");
                 final int nagiosPort = toInt(
-                    configuration.getProperty("hippie.nagios.port",
+                    configuration.getProperty("hippie.nsca.port",
                         "5667"));
                 final int connectionTimeout = toInt(
                     configuration.getProperty(
-                        "hippie.nagios.timeout.connection", "5000"));
+                        "hippie.nsca.timeout.connection", "5000"));
                 final int responseTimeout = toInt(
                     configuration.getProperty(
-                        "hippie.nagios.timeout.response", "15000"));
+                        "hippie.nsca.timeout.response", "15000"));
 
                 final NagiosNotifier notifier =
                     new NagiosNotifier(nagiosServer, nagiosPassword,

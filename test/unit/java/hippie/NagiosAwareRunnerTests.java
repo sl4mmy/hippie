@@ -45,18 +45,17 @@ public class NagiosAwareRunnerTests {
         public void initializeMocks() throws Exception {
                 MockitoAnnotations.initMocks(this);
 
-                when(configuration.getProperty("hippie.nagios.server"))
+                when(configuration.getProperty("hippie.nsca.server"))
                     .thenReturn("localhost");
-                when(
-                    configuration.getProperty("hippie.nagios.password"))
+                when(configuration.getProperty("hippie.nsca.password"))
                     .thenReturn("password");
-                when(configuration.getProperty("hippie.nagios.port",
+                when(configuration.getProperty("hippie.nsca.port",
                     "5667")).thenReturn("5667");
                 when(configuration.getProperty(
-                    "hippie.nagios.timeout.connection", "5000"))
+                    "hippie.nsca.timeout.connection", "5000"))
                     .thenReturn("5000");
                 when(configuration.getProperty(
-                    "hippie.nagios.timeout.response", "15000"))
+                    "hippie.nsca.timeout.response", "15000"))
                     .thenReturn("15000");
         }
 
@@ -109,8 +108,7 @@ public class NagiosAwareRunnerTests {
 
                 runner.run(junitNotifier);
 
-                verify(configuration)
-                    .getProperty("hippie.nagios.server");
+                verify(configuration).getProperty("hippie.nsca.server");
         }
 
         @Test
@@ -122,7 +120,7 @@ public class NagiosAwareRunnerTests {
                 runner.run(junitNotifier);
 
                 verify(configuration)
-                    .getProperty("hippie.nagios.password");
+                    .getProperty("hippie.nsca.password");
         }
 
         @Test
@@ -134,7 +132,7 @@ public class NagiosAwareRunnerTests {
                 runner.run(junitNotifier);
 
                 verify(configuration)
-                    .getProperty("hippie.nagios.port", "5667");
+                    .getProperty("hippie.nsca.port", "5667");
         }
 
         @Test
@@ -146,7 +144,7 @@ public class NagiosAwareRunnerTests {
                 runner.run(junitNotifier);
 
                 verify(configuration)
-                    .getProperty("hippie.nagios.timeout.connection",
+                    .getProperty("hippie.nsca.timeout.connection",
                         "5000");
         }
 
@@ -159,7 +157,7 @@ public class NagiosAwareRunnerTests {
                 runner.run(junitNotifier);
 
                 verify(configuration)
-                    .getProperty("hippie.nagios.timeout.response",
+                    .getProperty("hippie.nsca.timeout.response",
                         "15000");
         }
 

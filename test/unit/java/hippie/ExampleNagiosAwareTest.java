@@ -22,9 +22,8 @@ import org.junit.runner.RunWith;
 @RunWith(NagiosAwareRunner.class)
 public class ExampleNagiosAwareTest {
         static {
-                System.setProperty("hippie.nagios.server", "localhost");
-                System
-                    .setProperty("hippie.nagios.password", "password");
+                System.setProperty("hippie.nsca.server", "localhost");
+                System.setProperty("hippie.nsca.password", "password");
         }
 
         @Test

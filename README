@@ -11,14 +11,14 @@ public class IntegrationSmokeTests {
                 // Ideally, you would set these properties via your
                 // build tool (i.e. Ant, Maven, etc.), in your IDE, or
                 // at the command line.
-                System.setProperty("hippie.nagios.server", "localhost");
-                System.setProperty("hippie.nagios.password", "ABC123");
+                System.setProperty("hippie.nsca.server", "localhost");
+                System.setProperty("hippie.nsca.password", "ABC123");
 
                 // Optional JVM/System properties you can also set if
                 // you need to override the defaults:
-                // - hippie.nagios.port (default: 5667)
-                // - hippie.nagios.timeout.connection (default: 5000 ms)
-                // - hippie.nagios.timeout.response (default: 15000 ms)
+                // - hippie.nsca.port (default: 5667)
+                // - hippie.nsca.timeout.connection (default: 5000 ms)
+                // - hippie.nsca.timeout.response (default: 15000 ms)
         }
 
         @Test
