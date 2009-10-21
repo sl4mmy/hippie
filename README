@@ -18,11 +18,11 @@ public class IntegrationSmokeTests {
 
         private int nscaResponseTimeout = 15000;  // ms
 
-        private String serviceHost = "services.box";
-
         private NagiosNotifier notifier = new NagiosNotifier(nscaServer,
                 nscaPassword, nscaPort, nscaConnectionTimeout,
                 nscaResponseTimeout);
+
+        private String serviceHost = "service.box";
 
         @Rule ServiceMonitor monitor = new ServiceMonitor(serviceHost,
                 notifier);
