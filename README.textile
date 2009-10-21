@@ -6,6 +6,7 @@ h2. Example
 
 If you are using JUnit v4.7 or later, you can use the JUnit Rule API to
 write integration tests in the following style:
+
 <pre><code>
 public class IntegrationSmokeTests {
         private String nscaServer = "nagios.box";
@@ -95,6 +96,7 @@ public class IntegrationSmokeTests {
 If you are using JUnit v4.6 or earlier, you must write your hippie tests
 in the following style (which also works with JUnit v4.7+, but is not
 preferred):
+
 <pre><code>
 @RunWith(NagiosAwareRunner.class)
 public class IntegrationSmokeTests {
