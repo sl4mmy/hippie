@@ -64,8 +64,9 @@ public class NagiosAwareRunner extends Runner {
                     configuration.getProperty("hippie.nagios.server");
                 final String nagiosPassword =
                     configuration.getProperty("hippie.nagios.password");
-                final int nagiosPort = toInt(configuration.getProperty(
-                    "hippie.nagios.port", "5667"));
+                final int nagiosPort = toInt(
+                    configuration.getProperty("hippie.nagios.port",
+                        "5667"));
                 final int connectionTimeout = toInt(
                     configuration.getProperty(
                         "hippie.nagios.timeout.connection", "5000"));
@@ -73,9 +74,9 @@ public class NagiosAwareRunner extends Runner {
                     configuration.getProperty(
                         "hippie.nagios.timeout.response", "15000"));
 
-                final NagiosNotifier notifier = new NagiosNotifier(
-                    nagiosServer, nagiosPassword, nagiosPort,
-                    connectionTimeout, responseTimeout);
+                final NagiosNotifier notifier =
+                    new NagiosNotifier(nagiosServer, nagiosPassword,
+                        nagiosPort, connectionTimeout, responseTimeout);
                 final OnSuccess successStrategy =
                     new OnSuccess(notifier);
 
