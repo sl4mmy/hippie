@@ -93,9 +93,9 @@ public class IntegrationSmokeTests {
 }
 </code></pre>
 
-If you are using JUnit v4.6 or earlier, you must write your hippie tests
-in the following style (which also works with JUnit v4.7+, but is not
-preferred):
+If you are using JUnit v4.6 or earlier then you must use the
+<code>hippie</code> runner, instead (which also works with JUnit v4.7+,
+but is not preferred):
 
 <pre><code>
 @RunWith(NagiosAwareRunner.class)
