@@ -29,6 +29,9 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 public class ServiceMonitorTests {
         @Mock
         private Exception cause;
@@ -46,7 +49,7 @@ public class ServiceMonitorTests {
 
         @Test
         public void shouldBeAnInstanceOfWatchman() throws Exception {
-                assertEquals(true, new ServiceMonitor(
+                assertEquals(true, new ServiceMonitor("SERVICE HOST",
                     notifier) instanceof TestWatchman);
         }
 
@@ -63,7 +66,7 @@ public class ServiceMonitorTests {
                     .thenReturn(annotation);
 
                 final ServiceMonitor watchman =
-                    new ServiceMonitor(notifier);
+                    new ServiceMonitor("SERVICE HOST", notifier);
 
                 watchman.failed(cause, method);
 
@@ -78,11 +81,75 @@ public class ServiceMonitorTests {
                     .thenReturn(null);
 
                 final ServiceMonitor watchman =
-                    new ServiceMonitor(notifier);
+                    new ServiceMonitor("SERVICE HOST", notifier);
 
                 watchman.failed(cause, method);
 
                 verifyZeroInteractions(notifier);
+        }
+
+        @Test
+        public void shouldChooseServiceHostNameFromAnnotationWhenSetOnAnnotationAndServiceMonitoringTestsFail()
+            throws Exception {
+                final MonitorsService annotation =
+                    mock(MonitorsService.class);
+                when(annotation.name()).thenReturn("SERVICE NAME");
+                when(annotation.onHost())
+                    .thenReturn("SERVICE HOST NAME FROM ANNOTATION");
+                when(annotation.failureMessage())
+                    .thenReturn("FAILURE MESSAGE");
+                when(method.getAnnotation(MonitorsService.class))
+                    .thenReturn(annotation);
+
+                final ServiceMonitor watchman = new ServiceMonitor(
+                    "SERVICE HOST NAME FROM CONSTRUCTOR", notifier);
+
+                watchman.failed(cause, method);
+
+                verify(notifier).failed("SERVICE NAME",
+                    "SERVICE HOST NAME FROM ANNOTATION",
+                    "FAILURE MESSAGE");
+        }
+
+        @Test
+        public void shouldChooseServiceHostNameFromConstructorWhenServiceHostNameIsNotSetOnAnnotationAndServiceMonitoringTestsFail()
+            throws Exception {
+                final MonitorsService annotation =
+                    mock(MonitorsService.class);
+                when(annotation.name()).thenReturn("SERVICE NAME");
+                when(annotation.failureMessage())
+                    .thenReturn("FAILURE MESSAGE");
+                when(method.getAnnotation(MonitorsService.class))
+                    .thenReturn(annotation);
+
+                final ServiceMonitor watchman = new ServiceMonitor(
+                    "SERVICE HOST NAME FROM CONSTRUCTOR", notifier);
+
+                watchman.failed(cause, method);
+
+                verify(notifier).failed("SERVICE NAME",
+                    "SERVICE HOST NAME FROM CONSTRUCTOR",
+                    "FAILURE MESSAGE");
+        }
+
+        @Test
+        public void shouldDefaultServiceHostNameToLocalHostNameWhenServiceHostNameIsNotExplicitlySetAndServiceMonitoringTestsFail()
+            throws Exception {
+                final MonitorsService annotation =
+                    mock(MonitorsService.class);
+                when(annotation.name()).thenReturn("SERVICE NAME");
+                when(annotation.failureMessage())
+                    .thenReturn("FAILURE MESSAGE");
+                when(method.getAnnotation(MonitorsService.class))
+                    .thenReturn(annotation);
+
+                final ServiceMonitor watchman =
+                    new ServiceMonitor(notifier);
+
+                watchman.failed(cause, method);
+
+                verify(notifier).failed("SERVICE NAME", localHostName(),
+                    "FAILURE MESSAGE");
         }
 
         @Test
@@ -98,7 +165,7 @@ public class ServiceMonitorTests {
                     .thenReturn(annotation);
 
                 final ServiceMonitor watchman =
-                    new ServiceMonitor(notifier);
+                    new ServiceMonitor("SERVICE HOST", notifier);
 
                 watchman.succeeded(method);
 
@@ -114,14 +181,88 @@ public class ServiceMonitorTests {
                     .thenReturn(null);
 
                 final ServiceMonitor watchman =
-                    new ServiceMonitor(notifier);
+                    new ServiceMonitor("SERVICE HOST", notifier);
 
                 watchman.succeeded(method);
 
                 verifyZeroInteractions(notifier);
         }
 
+        @Test
+        public void shouldChooseServiceHostNameFromAnnotationWhenSetOnAnnotationAndServiceMonitoringTestsSucceed()
+            throws Exception {
+                final MonitorsService annotation =
+                    mock(MonitorsService.class);
+                when(annotation.name()).thenReturn("SERVICE NAME");
+                when(annotation.onHost())
+                    .thenReturn("SERVICE HOST NAME FROM ANNOTATION");
+                when(annotation.successMessage())
+                    .thenReturn("SUCCESS MESSAGE");
+                when(method.getAnnotation(MonitorsService.class))
+                    .thenReturn(annotation);
+
+                final ServiceMonitor watchman = new ServiceMonitor(
+                    "SERVICE HOST NAME FROM CONSTRUCTOR", notifier);
+
+                watchman.succeeded(method);
+
+                verify(notifier).succeeded("SERVICE NAME",
+                    "SERVICE HOST NAME FROM ANNOTATION",
+                    "SUCCESS MESSAGE");
+        }
+
+        @Test
+        public void shouldChooseServiceHostNameFromConstructorWhenServiceHostNameIsNotSetOnAnnotationAndServiceMonitoringTestsSucceed()
+            throws Exception {
+                final MonitorsService annotation =
+                    mock(MonitorsService.class);
+                when(annotation.name()).thenReturn("SERVICE NAME");
+                when(annotation.successMessage())
+                    .thenReturn("SUCCESS MESSAGE");
+                when(method.getAnnotation(MonitorsService.class))
+                    .thenReturn(annotation);
+
+                final ServiceMonitor watchman = new ServiceMonitor(
+                    "SERVICE HOST NAME FROM CONSTRUCTOR", notifier);
+
+                watchman.succeeded(method);
+
+                verify(notifier).succeeded("SERVICE NAME",
+                    "SERVICE HOST NAME FROM CONSTRUCTOR",
+                    "SUCCESS MESSAGE");
+        }
+
+        @Test
+        public void shouldDefaultServiceHostNameToLocalHostNameWhenServiceHostNameIsNotExplicitlySetAndServiceMonitoringTestsSucceed()
+            throws Exception {
+                final MonitorsService annotation =
+                    mock(MonitorsService.class);
+                when(annotation.name()).thenReturn("SERVICE NAME");
+                when(annotation.successMessage())
+                    .thenReturn("SUCCESS MESSAGE");
+                when(method.getAnnotation(MonitorsService.class))
+                    .thenReturn(annotation);
+
+                final ServiceMonitor watchman =
+                    new ServiceMonitor(notifier);
+
+                watchman.succeeded(method);
+
+                verify(notifier)
+                    .succeeded("SERVICE NAME", localHostName(),
+                        "SUCCESS MESSAGE");
+        }
+
         public static junit.framework.Test suite() {
                 return new JUnit4TestAdapter(ServiceMonitorTests.class);
+        }
+
+        private String localHostName() {
+                try {
+                        return InetAddress.getLocalHost()
+                            .getCanonicalHostName();
+                } catch (UnknownHostException e) {
+                        return "localhost";
+                }
         }
 }
