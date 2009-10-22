@@ -46,9 +46,9 @@ public class Configuration {
 
         public String getNagiosServer() {
                 if (nagiosServer == null) {
-                        bombOnNull("hippie.nsca.server");
+                        throw bombOnNull("hippie.nsca.server");
                 } else if (isEmpty(nagiosServer)) {
-                        bombOnEmpty("hippie.nsca.server");
+                        throw bombOnEmpty("hippie.nsca.server");
                 }
 
                 return nagiosServer;
@@ -56,9 +56,9 @@ public class Configuration {
 
         public String getNagiosPassword() {
                 if (nagiosPassword == null) {
-                        bombOnNull("hippie.nsca.password");
+                        throw bombOnNull("hippie.nsca.password");
                 } else if (isEmpty(nagiosPassword)) {
-                        bombOnEmpty("hippie.nsca.password");
+                        throw bombOnEmpty("hippie.nsca.password");
                 }
 
                 return nagiosPassword;
@@ -84,16 +84,19 @@ public class Configuration {
                 return Integer.valueOf(value);
         }
 
-        private void bombOnEmpty(final String property) {
-                bomb(property, "empty");
+        private IllegalStateException bombOnEmpty(
+            final String property) {
+                return bomb(property, "empty");
         }
 
-        private void bombOnNull(final String property) {
-                bomb(property, "not set");
+        private IllegalStateException bombOnNull(
+            final String property) {
+                return bomb(property, "not set");
         }
 
-        private void bomb(final String property, final String problem) {
-                throw new IllegalStateException(
+        private IllegalStateException bomb(final String property,
+            final String problem) {
+                return new IllegalStateException(
                     "The property " + property + " is " + problem);
         }
 }

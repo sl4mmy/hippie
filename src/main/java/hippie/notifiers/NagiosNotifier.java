@@ -24,7 +24,7 @@ import com.googlecode.jsendnsca.core.NagiosSettings;
  * Understands how to send NSCA passive service checks.
  */
 public class NagiosNotifier {
-        private final NagiosPassiveCheckSender notifier;
+        private final NagiosPassiveCheckSender delegate;
 
         public NagiosNotifier(final String nscaServer,
             final String nscaPassword, final int nscaPort,
@@ -44,8 +44,8 @@ public class NagiosNotifier {
                 this(new NagiosPassiveCheckSender(settings));
         }
 
-        public NagiosNotifier(final NagiosPassiveCheckSender notifier) {
-                this.notifier = notifier;
+        public NagiosNotifier(final NagiosPassiveCheckSender delegate) {
+                this.delegate = delegate;
         }
 
         public void failed(final String serviceName,
@@ -68,7 +68,7 @@ public class NagiosNotifier {
 
         public void send(final MessagePayload notification) {
                 try {
-                        notifier.send(notification);
+                        delegate.send(notification);
                 } catch (Exception e) {
                         System.err.println("Unable to notify Nagios:");
                         System.err.println(e.getMessage());
@@ -88,7 +88,7 @@ public class NagiosNotifier {
                 };
         }
 
-        public NagiosPassiveCheckSender getNotifier() {
-                return notifier;
+        NagiosPassiveCheckSender getDelegate() {
+                return delegate;
         }
 }

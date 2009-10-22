@@ -19,9 +19,6 @@ import hippie.notifiers.NagiosNotifier;
 import org.junit.rules.TestWatchman;
 import org.junit.runners.model.FrameworkMethod;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
 /**
  * Understands how to automatically notify Nagios servers of the status
  * of external service endpoints.
@@ -32,7 +29,7 @@ public class ServiceMonitor extends TestWatchman {
         private final NagiosNotifier notifier;
 
         public ServiceMonitor(final NagiosNotifier notifier) {
-                this(getLocalHostName(), notifier);
+                this("localhost", notifier);
         }
 
         public ServiceMonitor(final String serviceHost,
@@ -80,14 +77,5 @@ public class ServiceMonitor extends TestWatchman {
 
         private boolean isSet(final String value) {
                 return !(value == null || "".equals(value.trim()));
-        }
-
-        private static String getLocalHostName() {
-                try {
-                        return InetAddress.getLocalHost()
-                            .getCanonicalHostName();
-                } catch (UnknownHostException e) {
-                        return "localhost";
-                }
         }
 }
