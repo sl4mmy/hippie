@@ -15,6 +15,7 @@
  */
 package hippie;
 
+import hippie.configurations.Configuration;
 import hippie.listeners.NagiosAwareListener;
 import hippie.listeners.strategy.OnSuccess;
 import hippie.notifiers.NagiosNotifier;
@@ -25,24 +26,22 @@ import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.InitializationError;
 
-import java.util.Properties;
-
 /**
  * Understands how to execute JUnit 4.x-style service-monitoring tests.
  */
 public class NagiosAwareRunner extends Runner {
-        private final Properties configuration;
+        private final Configuration configuration;
 
         private final Runner delegate;
 
         public NagiosAwareRunner(final Class test)
             throws InitializationError {
                 this(new BlockJUnit4ClassRunner(test),
-                    System.getProperties());
+                    new Configuration(System.getProperties()));
         }
 
         private NagiosAwareRunner(final Runner delegate,
-            final Properties configuration) {
+            final Configuration configuration) {
                 this.delegate = delegate;
                 this.configuration = configuration;
         }
@@ -61,18 +60,14 @@ public class NagiosAwareRunner extends Runner {
 
         private RunListener initializeListener() {
                 final String nagiosServer =
-                    configuration.getProperty("hippie.nsca.server");
+                    configuration.getNagiosServer();
                 final String nagiosPassword =
-                    configuration.getProperty("hippie.nsca.password");
-                final int nagiosPort = toInt(
-                    configuration.getProperty("hippie.nsca.port",
-                        "5667"));
-                final int connectionTimeout = toInt(
-                    configuration.getProperty(
-                        "hippie.nsca.timeout.connection", "5000"));
-                final int responseTimeout = toInt(
-                    configuration.getProperty(
-                        "hippie.nsca.timeout.response", "15000"));
+                    configuration.getNagiosPassword();
+                final int nagiosPort = configuration.getNagiosPort();
+                final int connectionTimeout =
+                    configuration.getConnectionTimeout();
+                final int responseTimeout =
+                    configuration.getResponseTimeout();
 
                 final NagiosNotifier notifier =
                     new NagiosNotifier(nagiosServer, nagiosPassword,
@@ -82,9 +77,5 @@ public class NagiosAwareRunner extends Runner {
 
                 return new NagiosAwareListener(notifier,
                     successStrategy);
-        }
-
-        private int toInt(final String value) {
-                return Integer.valueOf(value);
         }
 }

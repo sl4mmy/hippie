@@ -15,6 +15,7 @@
  */
 package hippie;
 
+import hippie.configurations.Configuration;
 import hippie.listeners.NagiosAwareListener;
 import junit.framework.JUnit4TestAdapter;
 import static org.junit.Assert.assertEquals;
@@ -29,11 +30,10 @@ import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 
 import java.lang.reflect.Constructor;
-import java.util.Properties;
 
 public class NagiosAwareRunnerTests {
         @Mock
-        private Properties configuration;
+        private Configuration configuration;
 
         @Mock
         private Runner delegate;
@@ -45,18 +45,15 @@ public class NagiosAwareRunnerTests {
         public void initializeMocks() throws Exception {
                 MockitoAnnotations.initMocks(this);
 
-                when(configuration.getProperty("hippie.nsca.server"))
+                when(configuration.getNagiosServer())
                     .thenReturn("localhost");
-                when(configuration.getProperty("hippie.nsca.password"))
+                when(configuration.getNagiosPassword())
                     .thenReturn("password");
-                when(configuration.getProperty("hippie.nsca.port",
-                    "5667")).thenReturn("5667");
-                when(configuration.getProperty(
-                    "hippie.nsca.timeout.connection", "5000"))
-                    .thenReturn("5000");
-                when(configuration.getProperty(
-                    "hippie.nsca.timeout.response", "15000"))
-                    .thenReturn("15000");
+                when(configuration.getNagiosPort()).thenReturn(5667);
+                when(configuration.getConnectionTimeout())
+                    .thenReturn(5000);
+                when(configuration.getResponseTimeout())
+                    .thenReturn(15000);
         }
 
         @Test
@@ -108,57 +105,51 @@ public class NagiosAwareRunnerTests {
 
                 runner.run(junitNotifier);
 
-                verify(configuration).getProperty("hippie.nsca.server");
+                verify(configuration).getNagiosServer();
         }
 
         @Test
-        public void shouldGetNagiosPasswordFromConfiguration()
+        public void shouldGetNagiosPasswordFromConfigurationWhenRunning()
             throws Exception {
                 final NagiosAwareRunner runner =
                     instantiate(delegate, configuration);
 
                 runner.run(junitNotifier);
 
-                verify(configuration)
-                    .getProperty("hippie.nsca.password");
+                verify(configuration).getNagiosPassword();
         }
 
         @Test
-        public void shouldGetNagiosPortWithDefaultOf5667FromConfigurationWhenRunning()
+        public void shouldGetNagiosPortFromConfigurationWhenRunning()
             throws Exception {
                 final NagiosAwareRunner runner =
                     instantiate(delegate, configuration);
 
                 runner.run(junitNotifier);
 
-                verify(configuration)
-                    .getProperty("hippie.nsca.port", "5667");
+                verify(configuration).getNagiosPort();
         }
 
         @Test
-        public void shouldGetNagiosConnectionTimeoutWithDefaultOf5000MillisecondsFromConfigurationWhenRunning()
+        public void shouldGetNagiosConnectionTimeoutFromConfigurationWhenRunning()
             throws Exception {
                 final NagiosAwareRunner runner =
                     instantiate(delegate, configuration);
 
                 runner.run(junitNotifier);
 
-                verify(configuration)
-                    .getProperty("hippie.nsca.timeout.connection",
-                        "5000");
+                verify(configuration).getConnectionTimeout();
         }
 
         @Test
-        public void shouldGetNagiosResponseTimeoutWithDefaultOf15000MillisecondsFromConfigurationWhenRunning()
+        public void shouldGetNagiosResponseTimeoutFromConfigurationWhenRunning()
             throws Exception {
                 final NagiosAwareRunner runner =
                     instantiate(delegate, configuration);
 
                 runner.run(junitNotifier);
 
-                verify(configuration)
-                    .getProperty("hippie.nsca.timeout.response",
-                        "15000");
+                verify(configuration).getResponseTimeout();
         }
 
         public static junit.framework.Test suite() {
@@ -167,11 +158,11 @@ public class NagiosAwareRunnerTests {
         }
 
         private NagiosAwareRunner instantiate(final Runner delegate,
-            final Properties configuration) throws Exception {
+            final Configuration configuration) throws Exception {
                 final Constructor<NagiosAwareRunner> constructor =
                     NagiosAwareRunner.class
                         .getDeclaredConstructor(Runner.class,
-                            Properties.class);
+                            Configuration.class);
 
                 constructor.setAccessible(true);
 
