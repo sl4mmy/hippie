@@ -24,6 +24,9 @@ under the License.
 
 <suppressions>
         <suppress checks="MethodLength"
+                  files="Configuration.java"
+                  lines="34-45"/>
+        <suppress checks="MethodLength"
                   files="NagiosAwareRunner.java"
                   lines="62-84"/>
         <suppress checks="MethodLength"
