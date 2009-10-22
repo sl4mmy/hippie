@@ -43,7 +43,8 @@
                 depends="-package,--release-init,--release,-bump"/>
         <target name="-test-unit"
                 depends="--test-unit-init,--test-unit-compile,--test-unit-copy-resources,--test-unit-coverage-init,--test-unit,--test-unit-report,--test-unit-coverage-report"/>
-        <target name="-test" depends="-test-unit,--checkstyle"/>
+        <target name="-test"
+                depends="-test-unit,--checkstyle,--check-coverage"/>
 
         <!-- Target definitions -->
         <path id="cobertura.classpath">
@@ -220,34 +221,12 @@
         </target>
 
         <target name="--release">
-                <zip destfile="${project.root}/target/${ant.project.name}-${version.number}.zip"
+                <zip
+                    destfile="${project.root}/target/${ant.project.name}-${version.number}.zip"
                     duplicate="fail">
                         <zipfileset dir="${project.root}/target/dist"
-                            prefix="${ant.project.name}-${version.number}"/>
+                                    prefix="${ant.project.name}-${version.number}"/>
                 </zip>
-        </target>
-
-        <target name="--checkstyle">
-                <mkdir dir="target/checkstyle"/>
-                <checkstyle failOnViolation="false"
-                            failureProperty="checkstyle.errors"
-                            config="${project.root}/checkstyle.xml">
-                        <classpath>
-                                <path refid="compile.out"/>
-                        </classpath>
-                        <property key="checkstyle.cache.file"
-                                  file="target/checkstyle/cachefile"/>
-                        <fileset dir="src/main/java"
-                                 includes="**/*.java"/>
-                        <formatter type="plain"/>
-                        <formatter type="xml"
-                                   toFile="${project.root}/target/checkstyle/checkstyle_errors.xml"/>
-                </checkstyle>
-                <xslt in="target/checkstyle/checkstyle_errors.xml"
-                      out="target/checkstyle/checkstyle_report.html"
-                      style="${libs}/checkstyle/v5.0/contrib/checkstyle-simple.xsl"/>
-                <fail if="checkstyle.errors"
-                      message="Please remember to flush after coding"/>
         </target>
 
         <target name="--test-unit-init">
@@ -333,5 +312,36 @@
                 <fileset dir="src/main/java">
                         <include name="**/*.java"/>
                 </fileset>
+        </target>
+
+        <target name="--checkstyle">
+                <mkdir dir="target/checkstyle"/>
+                <checkstyle failOnViolation="false"
+                            failureProperty="checkstyle.errors"
+                            config="${project.root}/checkstyle.xml">
+                        <classpath>
+                                <path refid="compile.out"/>
+                        </classpath>
+                        <property key="checkstyle.cache.file"
+                                  file="target/checkstyle/cachefile"/>
+                        <fileset dir="src/main/java"
+                                 includes="**/*.java"/>
+                        <formatter type="plain"/>
+                        <formatter type="xml"
+                                   toFile="${project.root}/target/checkstyle/checkstyle_errors.xml"/>
+                </checkstyle>
+                <xslt in="target/checkstyle/checkstyle_errors.xml"
+                      out="target/checkstyle/checkstyle_report.html"
+                      style="${libs}/checkstyle/v5.0/contrib/checkstyle-simple.xsl"/>
+                <fail if="checkstyle.errors"
+                      message="Please remember to flush after coding"/>
+        </target>
+
+        <target name="--check-coverage">
+                <cobertura-check
+                    datafile="target/test/unit/cobertura.ser"
+                    branchrate="100" packagebranchrate="100"
+                    totalbranchrate="100" linerate="100"
+                    packagelinerate="100" totallinerate="100"/>
         </target>
 </project>
