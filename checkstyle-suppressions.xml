@@ -30,6 +30,9 @@ under the License.
                   files="NagiosAwareRunner.java"
                   lines="61-80"/>
         <suppress checks="MethodLength"
+                  files="NagiosNotifier.java"
+                  lines="29-41"/>
+        <suppress checks="MethodLength"
                   files="ServiceMonitor.java"
                   lines="33-44"/>
         <suppress checks="MethodLength"

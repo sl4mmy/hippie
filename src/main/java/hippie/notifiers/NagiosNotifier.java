@@ -19,8 +19,6 @@ import com.googlecode.jsendnsca.core.Level;
 import com.googlecode.jsendnsca.core.MessagePayload;
 import com.googlecode.jsendnsca.core.NagiosPassiveCheckSender;
 import com.googlecode.jsendnsca.core.NagiosSettings;
-import com.googlecode.jsendnsca.core.builders.MessagePayloadBuilder;
-import com.googlecode.jsendnsca.core.builders.NagiosSettingsBuilder;
 
 /**
  * Understands how to send NSCA passive service checks.
@@ -31,50 +29,66 @@ public class NagiosNotifier {
         public NagiosNotifier(final String nscaServer,
             final String nscaPassword, final int nscaPort,
             final int connectionTimeout, final int responseTimeout) {
-                final NagiosSettings settings =
-                    NagiosSettingsBuilder.withNagiosHost(nscaServer)
-                        .withPassword(nscaPassword).withPort(nscaPort)
-                        .withConnectionTimeout(connectionTimeout)
-                        .withResponseTimeout(responseTimeout).create();
-                this.notifier = new NagiosPassiveCheckSender(settings);
+                this(new NagiosSettings() {
+                        {
+                                setNagiosHost(nscaServer);
+                                setPassword(nscaPassword);
+                                setPort(nscaPort);
+                                setConnectTimeout(connectionTimeout);
+                                setTimeout(responseTimeout);
+                        }
+                });
+        }
+
+        public NagiosNotifier(final NagiosSettings settings) {
+                this(new NagiosPassiveCheckSender(settings));
+        }
+
+        public NagiosNotifier(final NagiosPassiveCheckSender notifier) {
+                this.notifier = notifier;
         }
 
         public void failed(final String serviceName,
             final String serviceHost, final String message) {
-                final MessagePayload notification =
-                    MessagePayloadBuilder.withHostname(serviceHost)
-                        .withLevel(Level.CRITICAL)
-                        .withServiceName(serviceName)
-                        .withMessage(message).create();
-                send(notification);
+                send(createMessagePayload(serviceName, serviceHost,
+                    Level.CRITICAL, message));
         }
 
         public void ignored(final String serviceName,
             final String serviceHost, final String message) {
-                final MessagePayload notification =
-                    MessagePayloadBuilder.withHostname(serviceHost)
-                        .withLevel(Level.UNKNOWN)
-                        .withServiceName(serviceName)
-                        .withMessage(message).create();
-                send(notification);
+                send(createMessagePayload(serviceName, serviceHost,
+                    Level.UNKNOWN, message));
         }
 
         public void succeeded(final String serviceName,
             final String serviceHost, final String message) {
-                final MessagePayload notification =
-                    MessagePayloadBuilder.withHostname(serviceHost)
-                        .withLevel(Level.OK)
-                        .withServiceName(serviceName)
-                        .withMessage(message).create();
-                send(notification);
+                send(createMessagePayload(serviceName, serviceHost,
+                    Level.OK, message));
         }
 
-        private void send(final MessagePayload notification) {
+        public void send(final MessagePayload notification) {
                 try {
                         notifier.send(notification);
                 } catch (Exception e) {
                         System.err.println("Unable to notify Nagios:");
                         System.err.println(e.getMessage());
                 }
+        }
+
+        public MessagePayload createMessagePayload(
+            final String serviceName, final String serviceHost,
+            final Level level, final String message) {
+                return new MessagePayload() {
+                        {
+                                setServiceName(serviceName);
+                                setHostname(serviceHost);
+                                setLevel(level);
+                                setMessage(message);
+                        }
+                };
+        }
+
+        public NagiosPassiveCheckSender getNotifier() {
+                return notifier;
         }
 }
